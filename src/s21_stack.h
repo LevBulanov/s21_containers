@@ -30,7 +30,7 @@ template <typename value_type>
 class stack {
  private:
   node<value_type>* ptr_top;
-  int size_;
+  int size_;  // FIX int!!!
 
  public:
   stack() : ptr_top(nullptr), size_(0) {};
@@ -47,7 +47,6 @@ class stack {
         ptr_s = ptr_s->get_next();
       };
       while (ptr_s != nullptr) {
-        ++size_;
         this->push(ptr_s->get_data());
         ptr_s = ptr_s->get_previous();
       };
@@ -63,7 +62,8 @@ class stack {
   };
 
   bool empty() const { return size_ == 0; };
-  int size() const { return size_; };
+
+  int size() const { return size_; };  // FIX int!!!
 
   void push(const value_type& value) {
     ++size_;
@@ -91,6 +91,15 @@ class stack {
       if (ptr_top != nullptr) ptr_top->set_previous(nullptr);
     }
   };
+
+  void swap(stack& other) {
+    node<value_type>* tmp = other.ptr_top;
+    int size_tmp = other.size_;
+    other.size_ = this->size_;
+    other.ptr_top = this->ptr_top;
+    this->ptr_top = tmp;
+    this->size_ = size_tmp;
+  }
 
   void print() {
     std::cout << "{";
