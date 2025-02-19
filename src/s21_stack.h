@@ -16,7 +16,8 @@ class node {
 
  public:
   node() {};
-  node(value_type data) : data_(data), next_(nullptr), previous_(nullptr) {};
+  explicit node(value_type data)
+      : data_(data), next_(nullptr), previous_(nullptr) {};
   value_type get_data() const { return data_; };
   value_type& get_data() { return data_; };
   node<value_type>* get_next() const { return next_; };
@@ -47,6 +48,7 @@ class stack {
  public:
   stack() : ptr_top_(nullptr), size_(0) {};
   stack(std::initializer_list<value_type> const& items) : stack() {
+    std::cout << "List constructor" << std::endl;
     for (const_reference item : items) {
       this->push(item);
     }
@@ -64,12 +66,26 @@ class stack {
       };
     };
   };
-  stack(stack&& s) : stack() {
+  stack(stack&& s) noexcept : stack() {
     std::cout << "Move constructor" << std::endl;
     *this = std::move(s);
-    // *this = std::move(s);
   }
   ~stack() { this->clean(); };
+  stack& operator=(stack&& s) {
+    this->clean();
+    size_ = s.size_;
+    ptr_top_ = s.ptr_top_;
+    s.size_ = 0;
+    s.ptr_top_ = nullptr;
+    return *this;
+  }
+
+  const_reference top() const {
+    if (ptr_top_ == nullptr) {
+      throw std::range_error("Stack is empty");
+    }
+    return ptr_top_->get_data();
+  };
 
   bool empty() const { return size_ == 0; };
 
@@ -84,13 +100,6 @@ class stack {
     if (ptr_top_ != nullptr) ptr_top_->set_previous(new_node);
     ptr_top_ = new_node;
   }
-
-  const_reference top() {
-    if (ptr_top_ == nullptr) {
-      throw std::range_error("Stack is empty");
-    }
-    return ptr_top_->get_data();
-  };
 
   void pop() {
     if (size_ != 0) {
@@ -111,16 +120,7 @@ class stack {
     this->size_ = size_tmp;
   };
 
-  stack& operator=(stack&& s) {
-    this->clean();
-    size_ = s.size_;
-    ptr_top_ = s.ptr_top_;
-    s.size_ = 0;
-    s.ptr_top_ = nullptr;
-    return *this;
-  }
-
-  void print() {
+  void print() const {
     std::cout << "{";
     node<value_type>* ptr = ptr_top_;
     while (ptr != nullptr) {
