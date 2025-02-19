@@ -17,9 +17,7 @@ int main() {
   std::cout << "push 20" << std::endl;
   std::cout << "stack1:" << std::endl;
   stack1.print();
-  // stack1.pop();
   std::cout << "stack1.top - " << stack1.top() << std::endl;
-  // stack1.pop();
   std::cout << "stack1.size - " << stack1.size() << std::endl;
   std::cout << "stack1.empty - " << stack1.empty() << std::endl;
   s21::stack<int> stack2{5, 10, 15, 20};
@@ -45,4 +43,13 @@ int main() {
   stack1.print();
   std::cout << "stack1.size - " << stack1.size() << std::endl;
   std::cout << "stack1.empty - " << stack1.empty() << std::endl;
+  s21::stack<int> stack4 = std::move(stack1);
+  std::cout << "stack1:" << std::endl;
+  stack1.print();
+  std::cout << "stack4:" << std::endl;
+  stack4.print();
+  stack4 = std::move(stack3);
+  std::cout << "move stack4 <- stack3" << std::endl;
+  std::cout << "stack4:" << std::endl;
+  stack4.print();
 }

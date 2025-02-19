@@ -26,23 +26,35 @@ class node {
   void set_previous(node<value_type>* ptr) { previous_ = ptr; };
 };
 
-template <typename value_type>
+template <typename value_type, typename size_type = size_t>
 class stack {
  private:
-  node<value_type>* ptr_top;
-  int size_;  // FIX int!!!
+  node<value_type>* ptr_top_;
+  size_type size_;
+
+  typedef value_type& reference;
+  typedef const value_type& const_reference;
+
+  void clean() {
+    node<value_type>* ptr = ptr_top_;
+    while (ptr_top_ != nullptr) {
+      ptr_top_ = ptr->get_next();
+      delete ptr;
+      ptr = ptr_top_;
+    }
+  }
 
  public:
-  stack() : ptr_top(nullptr), size_(0) {};
+  stack() : ptr_top_(nullptr), size_(0) {};
   stack(std::initializer_list<value_type> const& items) : stack() {
-    for (const value_type& item : items) {
+    for (const_reference item : items) {
       this->push(item);
     }
   };
   stack(const stack& s) : stack() {
     std::cout << "Copy constructor" << std::endl;
-    node<value_type>* ptr_s = s.ptr_top;
-    if (s.ptr_top != nullptr) {
+    node<value_type>* ptr_s = s.ptr_top_;
+    if (s.ptr_top_ != nullptr) {
       while (ptr_s->get_next() != nullptr) {
         ptr_s = ptr_s->get_next();
       };
@@ -52,58 +64,65 @@ class stack {
       };
     };
   };
-  ~stack() {
-    node<value_type>* ptr = ptr_top;
-    while (ptr_top != nullptr) {
-      ptr_top = ptr->get_next();
-      delete ptr;
-      ptr = ptr_top;
-    }
-  };
+  stack(stack&& s) : stack() {
+    std::cout << "Move constructor" << std::endl;
+    *this = std::move(s);
+    // *this = std::move(s);
+  }
+  ~stack() { this->clean(); };
 
   bool empty() const { return size_ == 0; };
 
-  int size() const { return size_; };  // FIX int!!!
+  size_type size() const { return size_; };
 
-  void push(const value_type& value) {
+  void push(const_reference value) {
     ++size_;
     node<value_type>* new_node = new node<value_type>;
     new_node->set_data(value);
-    new_node->set_next(ptr_top);
+    new_node->set_next(ptr_top_);
     new_node->set_previous(nullptr);
-    if (ptr_top != nullptr) ptr_top->set_previous(new_node);
-    ptr_top = new_node;
+    if (ptr_top_ != nullptr) ptr_top_->set_previous(new_node);
+    ptr_top_ = new_node;
   }
 
-  const value_type& top() {
-    if (ptr_top == nullptr) {
+  const_reference top() {
+    if (ptr_top_ == nullptr) {
       throw std::range_error("Stack is empty");
     }
-    return ptr_top->get_data();
+    return ptr_top_->get_data();
   };
 
   void pop() {
     if (size_ != 0) {
       --size_;
-      node<value_type>* tmp = ptr_top;
-      ptr_top = ptr_top->get_next();
+      node<value_type>* tmp = ptr_top_;
+      ptr_top_ = ptr_top_->get_next();
       delete tmp;
-      if (ptr_top != nullptr) ptr_top->set_previous(nullptr);
+      if (ptr_top_ != nullptr) ptr_top_->set_previous(nullptr);
     }
   };
 
   void swap(stack& other) {
-    node<value_type>* tmp = other.ptr_top;
-    int size_tmp = other.size_;
+    node<value_type>* ptr_tmp = other.ptr_top_;
+    size_type size_tmp = other.size_;
     other.size_ = this->size_;
-    other.ptr_top = this->ptr_top;
-    this->ptr_top = tmp;
+    other.ptr_top_ = this->ptr_top_;
+    this->ptr_top_ = ptr_tmp;
     this->size_ = size_tmp;
+  };
+
+  stack& operator=(stack&& s) {
+    this->clean();
+    size_ = s.size_;
+    ptr_top_ = s.ptr_top_;
+    s.size_ = 0;
+    s.ptr_top_ = nullptr;
+    return *this;
   }
 
   void print() {
     std::cout << "{";
-    node<value_type>* ptr = ptr_top;
+    node<value_type>* ptr = ptr_top_;
     while (ptr != nullptr) {
       std::cout << ptr->get_data();
       ptr = ptr->get_next();
