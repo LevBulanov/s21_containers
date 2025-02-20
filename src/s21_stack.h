@@ -1,5 +1,5 @@
-#ifndef SRC_S21_STACK_H
-#define SRC_S21_STACK_H
+#ifndef S21_CONTAINERS_STACK_H
+#define S21_CONTAINERS_STACK_H
 
 #include <initializer_list>
 #include <iostream>
@@ -18,11 +18,11 @@ class node {
   node() {};
   explicit node(value_type data)
       : data_(data), next_(nullptr), previous_(nullptr) {};
-  value_type get_data() const { return data_; };
+  value_type& get_data() const { return data_; };
   value_type& get_data() { return data_; };
   node<value_type>* get_next() const { return next_; };
   node<value_type>* get_previous() const { return previous_; };
-  void set_data(value_type data) { data_ = data; };
+  void set_data(const value_type data) { data_ = data; };
   void set_next(node<value_type>* ptr) { next_ = ptr; };
   void set_previous(node<value_type>* ptr) { previous_ = ptr; };
 };
@@ -48,13 +48,13 @@ class stack {
  public:
   stack() : ptr_top_(nullptr), size_(0) {};
   stack(std::initializer_list<value_type> const& items) : stack() {
-    std::cout << "List constructor" << std::endl;
+    // std::cout << "List constructor" << std::endl;
     for (const_reference item : items) {
       this->push(item);
     }
   };
   stack(const stack& s) : stack() {
-    std::cout << "Copy constructor" << std::endl;
+    // std::cout << "Copy constructor" << std::endl;
     node<value_type>* ptr_s = s.ptr_top_;
     if (s.ptr_top_ != nullptr) {
       while (ptr_s->get_next() != nullptr) {
@@ -67,7 +67,7 @@ class stack {
     };
   };
   stack(stack&& s) noexcept : stack() {
-    std::cout << "Move constructor" << std::endl;
+    // std::cout << "Move constructor" << std::endl;
     *this = std::move(s);
   }
   ~stack() { this->clean(); };
@@ -87,7 +87,7 @@ class stack {
     return ptr_top_->get_data();
   };
 
-  bool empty() const { return size_ == 0; };
+  bool empty() const { return ptr_top_ == nullptr; };
 
   size_type size() const { return size_; };
 
@@ -134,4 +134,4 @@ class stack {
 
 }  // namespace s21
 
-#endif  // SRC_S21_STACK_H
+#endif  // S21_CONTAINERS_STACK_H
