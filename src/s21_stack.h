@@ -9,22 +9,23 @@
 
 namespace s21 {
 
-template <typename value_type, typename size_type = size_t>
+template <typename value_type>
 class stack {
  private:
-  node<value_type>* ptr_top_;
-  size_type size_;
-
   typedef value_type& reference;
   typedef const value_type& const_reference;
+  typedef size_t size_type;
+  node<value_type>* ptr_top_ = nullptr;
+  size_type size_ = 0;
 
-  void clean() {
-    node<value_type>* ptr = ptr_top_;
+  void clear() {
+    node<value_type>* ptr_tmp = ptr_top_;
     while (ptr_top_ != nullptr) {
-      ptr_top_ = ptr->get_next();
-      delete ptr;
-      ptr = ptr_top_;
+      ptr_top_ = ptr_tmp->get_next();
+      delete ptr_tmp;
+      ptr_tmp = ptr_top_;
     }
+    size_ = 0;
   }
 
  public:
@@ -52,9 +53,9 @@ class stack {
     // std::cout << "Move constructor" << std::endl;
     *this = std::move(s);
   }
-  ~stack() { this->clean(); };
+  ~stack() { this->clear(); };
   stack& operator=(stack&& s) {
-    this->clean();
+    this->clear();
     size_ = s.size_;
     ptr_top_ = s.ptr_top_;
     s.size_ = 0;
@@ -111,7 +112,7 @@ class stack {
       if (ptr != nullptr) std::cout << ", ";
     }
     std::cout << "}" << std::endl;
-  }
+  };
 };
 
 }  // namespace s21

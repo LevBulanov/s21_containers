@@ -6,9 +6,9 @@ namespace s21 {
 template <typename value_type>
 class node {
  private:
-  value_type data_;
-  node<value_type>* next_;
-  node<value_type>* previous_;
+  value_type data_ = {0};
+  node<value_type>* next_ = nullptr;
+  node<value_type>* previous_ = nullptr;
 
  public:
   node() {};
