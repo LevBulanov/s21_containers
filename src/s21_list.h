@@ -116,6 +116,21 @@ class list {
     this->size_ = size_tmp;
   }
 
+  void reverse() {
+    node<value_type>* ptr = ptr_begin_;
+    node<value_type>* ptr_tmp = nullptr;
+    while (ptr != ptr_end_) {
+      ptr_tmp = ptr->get_next();
+      ptr->set_next(ptr->get_previous());
+      ptr->set_previous(ptr_tmp);
+      ptr = ptr_tmp;
+    }
+    ptr_begin_ = ptr_end_->get_previous();
+    ptr_tmp = ptr_end_->get_next();
+    ptr_end_->set_next(ptr_end_->get_previous());
+    ptr_end_->set_previous(ptr_tmp);
+  }
+
   void print() const {
     std::cout << "{";
     node<value_type>* ptr = ptr_begin_;

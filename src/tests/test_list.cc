@@ -99,17 +99,23 @@ TEST(ListTest, Swap) {
   list2.print();  // 0, 0, 0, 0, 0
 }
 
-// TEST(StackTest, ListConstructor) {
-//   s21::list<char> list1{'a', 'b', 'c', 'd'};
-//   EXPECT_EQ(list1.empty(), false);
-//   EXPECT_EQ(list1.top(), 'd');
-//   EXPECT_EQ(list1.size(), 4);
-//   list1.pop();
-//   list1.push('x');
-//   EXPECT_EQ(list1.empty(), false);
-//   EXPECT_EQ(list1.size(), 4);
-//   EXPECT_EQ(list1.top(), 'x');
-// }
+TEST(ListTest, Reverse) {
+  s21::list<char> list1{'a', 'b', 'c', 'd'};
+  EXPECT_EQ(list1.empty(), false);
+  EXPECT_EQ(list1.size(), 4);
+  list1.print();  // a, b, c, d
+  list1.reverse();
+  EXPECT_EQ(list1.empty(), false);
+  EXPECT_EQ(list1.size(), 4);
+  list1.print();  // d, c, b, a
+  list1.push_front('e');
+  list1.reverse();
+  list1.print();  // a, b, c, d, e
+  list1.clear();
+  EXPECT_EQ(list1.empty(), true);
+  EXPECT_EQ(list1.size(), 0);
+  list1.reverse();
+}
 
 // TEST(StackTest, CopyConstructor) {
 //   s21::list<char> list1{'a', 'b', 'c', 'd'};
@@ -135,37 +141,6 @@ TEST(ListTest, Swap) {
 //   EXPECT_EQ(list2.empty(), false);
 //   EXPECT_EQ(list2.size(), 4);
 //   EXPECT_EQ(list2.top(), 'x');
-// }
-
-// TEST(StackTest, SwapTest1) {
-//   s21::list<int> list1;
-//   s21::list<int> list2{1, 2, 3, 4};
-//   EXPECT_EQ(list1.empty(), true);
-//   EXPECT_EQ(list1.size(), 0);
-//   EXPECT_EQ(list2.empty(), false);
-//   EXPECT_EQ(list2.top(), 4);
-//   EXPECT_EQ(list2.size(), 4);
-//   list1.swap(list2);
-//   EXPECT_EQ(list2.empty(), true);
-//   EXPECT_EQ(list2.size(), 0);
-//   EXPECT_EQ(list1.empty(), false);
-//   EXPECT_EQ(list1.top(), 4);
-//   EXPECT_EQ(list1.size(), 4);
-//   list1.pop();
-//   list2.push(5);
-//   EXPECT_EQ(list1.empty(), false);
-//   EXPECT_EQ(list1.top(), 3);
-//   EXPECT_EQ(list1.size(), 3);
-//   EXPECT_EQ(list2.empty(), false);
-//   EXPECT_EQ(list2.top(), 5);
-//   EXPECT_EQ(list2.size(), 1);
-//   list2.swap(list1);
-//   EXPECT_EQ(list2.empty(), false);
-//   EXPECT_EQ(list2.top(), 3);
-//   EXPECT_EQ(list2.size(), 3);
-//   EXPECT_EQ(list1.empty(), false);
-//   EXPECT_EQ(list1.top(), 5);
-//   EXPECT_EQ(list1.size(), 1);
 // }
 
 int main(int argc, char **argv) {
