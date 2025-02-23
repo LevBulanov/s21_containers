@@ -29,15 +29,24 @@ class stack {
   }
 
  public:
-  stack() : ptr_top_(nullptr), size_(0) {};
+  // default constructor, creates empty stack
+  stack() : ptr_top_(nullptr), size_(0) {}
+  // initializer list constructor
   stack(std::initializer_list<value_type> const& items) : stack() {
-    // std::cout << "List constructor" << std::endl;
     for (const_reference item : items) {
       this->push(item);
     }
-  };
-  stack(const stack& s) : stack() {
-    // std::cout << "Copy constructor" << std::endl;
+  }
+  // copy constructor
+  stack(const stack& s) : stack() { *this = s; }
+  // move constructor
+  stack(stack&& s) noexcept : stack() { *this = std::move(s); }
+  // destructor
+  ~stack() { this->clear(); };
+  // copy assignment operator
+  stack& operator=(const stack& s) {
+    // std::cout << "Copy assignment" << std::endl;
+    this->clear();
     node<value_type>* ptr_s = s.ptr_top_;
     if (s.ptr_top_ != nullptr) {
       while (ptr_s->get_next() != nullptr) {
@@ -48,12 +57,9 @@ class stack {
         ptr_s = ptr_s->get_previous();
       };
     };
-  };
-  stack(stack&& s) noexcept : stack() {
-    // std::cout << "Move constructor" << std::endl;
-    *this = std::move(s);
+    return *this;
   }
-  ~stack() { this->clear(); };
+  // move assignment operator
   stack& operator=(stack&& s) {
     this->clear();
     size_ = s.size_;
@@ -62,7 +68,6 @@ class stack {
     s.ptr_top_ = nullptr;
     return *this;
   }
-
   const_reference top() const {
     if (ptr_top_ == nullptr) {
       throw std::range_error("Stack is empty");
