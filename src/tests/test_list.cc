@@ -7,11 +7,19 @@ TEST(ListTest, EmptyList1) {
   s21::list<int> list1;
   EXPECT_EQ(list1.empty(), true);
   EXPECT_EQ(list1.size(), 0);
-
-  // list1.pop();
+  list1.pop_back();
   // EXPECT_EQ(list1.empty(), true);
   // EXPECT_EQ(list1.size(), 0);
-  // list1.push(10);
+  list1.push_back(10);
+  EXPECT_EQ(list1.size(), 1);
+  list1.push_back(20);
+  EXPECT_EQ(list1.size(), 2);
+  EXPECT_EQ(list1.empty(), false);
+  list1.print();
+  list1.pop_back();
+  EXPECT_EQ(list1.size(), 1);
+  list1.push_back(30);
+  list1.print();
   // EXPECT_EQ(list1.top(), 10);
   // EXPECT_EQ(list1.empty(), false);
   // EXPECT_EQ(list1.size(), 1);
@@ -19,6 +27,17 @@ TEST(ListTest, EmptyList1) {
   // EXPECT_EQ(list1.empty(), true);
   // EXPECT_EQ(list1.size(), 0);
   list1.clear();
+  list1.pop_back();
+  EXPECT_EQ(list1.empty(), true);
+  EXPECT_EQ(list1.size(), 0);
+  list1.print();
+  list1.push_back(10);
+  list1.push_back(20);
+  EXPECT_EQ(list1.empty(), false);
+  EXPECT_EQ(list1.size(), 2);
+  list1.print();
+  list1.clear();
+  EXPECT_EQ(list1.size(), 0);
 }
 
 // TEST(StackTest, EmptyStack2) {

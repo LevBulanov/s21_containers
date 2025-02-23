@@ -17,11 +17,12 @@ class list {
   size_type size_;
 
  public:
+  // default constructor, creates empty stack
   list() {
     node<value_type>* new_node = new node<value_type>;
     new_node->set_data({0});
-    new_node->set_next(nullptr);
-    new_node->set_previous(nullptr);
+    new_node->set_next(new_node);
+    new_node->set_previous(new_node);
     ptr_begin_ = new_node;
     ptr_end_ = new_node;
     size_ = 0;
@@ -53,6 +54,28 @@ class list {
     }
     size_ = 0;
   };
+
+  void push_back(const_reference value) {
+    ++size_;
+    node<value_type>* new_node = new node<value_type>;
+    new_node->set_data(value);
+    if (ptr_begin_ == ptr_end_) ptr_begin_ = new_node;
+    ptr_end_->get_previous()->set_next(new_node);
+    new_node->set_previous(ptr_end_->get_previous());
+    ptr_end_->set_previous(new_node);
+    new_node->set_next(ptr_end_);
+  }
+
+  void pop_back() {
+    if (ptr_begin_ != ptr_end_) {
+      --size_;
+      node<value_type>* ptr_tmp = ptr_end_->get_previous();
+      if (ptr_begin_ == ptr_tmp) ptr_begin_ = ptr_end_;
+      ptr_tmp->get_previous()->set_next(ptr_tmp->get_next());
+      ptr_end_->set_previous(ptr_tmp->get_previous());
+      delete ptr_tmp;
+    }
+  }
 
   void print() const {
     std::cout << "{";
