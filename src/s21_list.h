@@ -33,15 +33,39 @@ class list {
   }
   // initializer list constructor
   list(std::initializer_list<value_type> const& items) : list() {
-    // std::cout << "List constructor" << std::endl;
     for (const_reference item : items) {
       this->push_back(item);
     }
   }
+  // copy constructor
+  list(const list& l) : list() { *this = l; }
+  // move constructor
+  list(list&& l) : list() { *this = std::move(l); }
   // destructor
   ~list() {
     this->clear();
     delete ptr_end_;
+  }
+  // copy assignment operator
+  list& operator=(const list& l) {
+    // std::cout << "Copy assignment" << std::endl;
+    this->clear();
+    node<value_type>* ptr_l = l.ptr_begin_;
+    if (!l.empty()) {
+      while (ptr_l != l.ptr_end_) {
+        this->push_back(ptr_l->get_data());
+        ptr_l = ptr_l->get_next();
+      };
+    };
+    return *this;
+  }
+
+  // move assignment operator
+  list& operator=(list&& l) {
+    // std::cout << "Move assignment" << std::endl;
+    this->clear();
+    this->swap(l);
+    return *this;
   }
 
   bool empty() const { return ptr_begin_ == ptr_end_; };

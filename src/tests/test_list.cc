@@ -81,6 +81,50 @@ TEST(ListTest, PushMix) {
   EXPECT_EQ(list1.size(), 0);
 }
 
+TEST(ListTest, Copy) {
+  s21::list<char> list1{'a', 'b', 'c', 'd'};
+  s21::list<char> list2 = list1;
+  EXPECT_EQ(list2.size(), 4);
+  EXPECT_EQ(list2.empty(), false);
+  list2.pop_back();
+  list2.pop_front();
+  EXPECT_EQ(list1.size(), 4);
+  list2.push_front('A');
+  list2.push_back('Z');
+  EXPECT_EQ(list2.size(), 4);
+  EXPECT_EQ(list2.empty(), false);
+  list2.print();  // A, b, c, Z
+  list1 = list2;
+  list2.pop_front();
+  EXPECT_EQ(list2.size(), 3);
+  EXPECT_EQ(list1.size(), 4);
+  EXPECT_EQ(list1.empty(), false);
+  list1.print();  // A, b, c, Z
+}
+
+TEST(ListTest, Move) {
+  s21::list<char> list1{'a', 'b', 'c', 'd'};
+  s21::list<char> list2;
+  list2 = std::move(list1);
+  EXPECT_EQ(list2.size(), 4);
+  EXPECT_EQ(list2.empty(), false);
+  EXPECT_EQ(list1.size(), 0);
+  EXPECT_EQ(list1.empty(), true);
+  list2.print();  // A, b, c, Z
+  list1.print();  // {}
+  s21::list<char> list3 = std::move(list2);
+  EXPECT_EQ(list3.size(), 4);
+  EXPECT_EQ(list3.empty(), false);
+  EXPECT_EQ(list2.size(), 0);
+  EXPECT_EQ(list2.empty(), true);
+  list3.pop_front();
+  list3.pop_back();
+  list1 = std::move(list3);
+  EXPECT_EQ(list1.size(), 2);
+  EXPECT_EQ(list1.empty(), false);
+  list1.print();  // b, c
+}
+
 TEST(ListTest, Swap) {
   s21::list<int> list1(5);
   EXPECT_EQ(list1.empty(), false);
