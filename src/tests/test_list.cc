@@ -161,32 +161,6 @@ TEST(ListTest, Reverse) {
   list1.reverse();
 }
 
-// TEST(StackTest, CopyConstructor) {
-//   s21::list<char> list1{'a', 'b', 'c', 'd'};
-//   s21::list<char> list2 = list1;
-//   EXPECT_EQ(list2.empty(), false);
-//   EXPECT_EQ(list2.top(), 'd');
-//   EXPECT_EQ(list2.size(), 4);
-//   list2.pop();
-//   list2.push('x');
-//   EXPECT_EQ(list2.empty(), false);
-//   EXPECT_EQ(list2.size(), 4);
-//   EXPECT_EQ(list2.top(), 'x');
-// }
-
-// TEST(StackTest, MoveConstructor) {
-//   s21::list<char> list1{'a', 'b', 'c', 'd'};
-//   s21::list<char> list2 = std::move(list1);
-//   EXPECT_EQ(list2.empty(), false);
-//   EXPECT_EQ(list2.top(), 'd');
-//   EXPECT_EQ(list2.size(), 4);
-//   list2.pop();
-//   list2.push('x');
-//   EXPECT_EQ(list2.empty(), false);
-//   EXPECT_EQ(list2.size(), 4);
-//   EXPECT_EQ(list2.top(), 'x');
-// }
-
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

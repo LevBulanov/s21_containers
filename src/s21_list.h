@@ -1,22 +1,41 @@
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <stdexcept>
 
 #include "s21_containers_common.h"
 
 namespace s21 {
 
+// template <typename value_type>
+// class ListIterator
+//     : public std::iterator<std:: , value_type> {
+//  public:
+//   ListIterator(value_type* p) : ptr_(p) {};
+//   ListIterator(const ListIterator& it) : ptr_(it.ptr) {};
+
+//   bool operator==(ListIterator const& other) const {
+//     return ptr_ == other.ptr_;
+//   };
+//   bool operator!=(ListIterator const& other) const {
+//     return ptr_ != other.ptr_;
+//   };
+//   ListIterator operator++() { return ptr_->get_next(); };
+//   ListIterator operator--() { return ptr_->get_previous(); };
+//   value_type operator*() { return ptr_->get_data(); };
+
+//  private:
+//   node<value_type>* ptr_;
+// };
+
 template <typename value_type>
 class list {
- private:
+ public:
   typedef value_type& reference;
   typedef const value_type& const_reference;
   typedef size_t size_type;
-  node<value_type>* ptr_begin_;
-  node<value_type>* ptr_end_;
-  size_type size_;
+  typedef ListIterator<value_type> iterator;
 
- public:
   // default constructor, creates empty stack
   list() {
     node<value_type>* new_node = new node<value_type>;
@@ -26,6 +45,7 @@ class list {
     ptr_begin_ = new_node;
     ptr_end_ = new_node;
     size_ = 0;
+    // it(ptr_begin_);
   }
   // parameterized constructor, creates the list of size n
   explicit list(size_type n) : list() {
@@ -171,6 +191,12 @@ class list {
     //           << ptr_end_->get_next()->get_data() << std::endl;
     std::cout << "}" << std::endl;
   }
+
+ private:
+  node<value_type>* ptr_begin_;
+  node<value_type>* ptr_end_;
+  size_type size_;
+  // iterator it;
 };
 
 }  // namespace s21
