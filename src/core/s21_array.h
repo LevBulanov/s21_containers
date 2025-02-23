@@ -14,12 +14,12 @@ class array {
 
         //constructors
         array() = default;
-        array(std::initializer_list<value_type> init) {
-            if (init.size() > N) {
+        array(std::initializer_list<value_type> const &items) {
+            if (items.size() > N) {
                 throw std::out_of_range("Too much of elements in the initializer list");
             }
             size_t i = 0;
-            for (auto it = init.begin(); it != init.end(); ++it) {
+            for (auto it = items.begin(); it != items.end(); ++it) {
                 data_[i++] = *it;
             }
         }
