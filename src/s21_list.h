@@ -27,18 +27,21 @@ class list {
     ptr_end_ = new_node;
     size_ = 0;
   }
-  list(size_type n) : list() {
-    // for (int i = 0; i < n; ++i) this->push({0});
+  // parameterized constructor, creates the list of size n
+  explicit list(size_type n) : list() {
+    for (int i = 0; i < n; ++i) this->push_front({0});
   }
+  // initializer list constructor
   list(std::initializer_list<value_type> const& items) : list() {
     // std::cout << "List constructor" << std::endl;
-    // for (const_reference item : items) {
-    //   this->push(item);
-    // }
+    for (const_reference item : items) {
+      this->push_back(item);
+    }
   }
+  // destructor
   ~list() {
     this->clear();
-    delete ptr_begin_;
+    delete ptr_end_;
   }
 
   bool empty() const { return ptr_begin_ == ptr_end_; };

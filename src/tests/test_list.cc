@@ -82,24 +82,21 @@ TEST(ListTest, PushMix) {
 }
 
 TEST(ListTest, Swap) {
-  s21::list<double> list1;
-  // EXPECT_EQ(list1.empty(), true);
-  // EXPECT_EQ(list1.size(), 0);
-  // list1.push_front(10);
-  // list1.push_back(20);
-  // list1.push_front(1);
-  // list1.push_back(30);
-  // EXPECT_EQ(list1.size(), 4);
-  // EXPECT_EQ(list1.empty(), false);
-  // list1.print();  // 1, 10, 20, 30
-  // list1.pop_front();
-  // list1.print();  // 10, 20, 30
-  // list1.pop_back();
-  // list1.print();  // 10, 20
-  // list1.pop_front();
-  // list1.pop_back();
-  // EXPECT_EQ(list1.empty(), true);
-  // EXPECT_EQ(list1.size(), 0);
+  s21::list<int> list1(5);
+  EXPECT_EQ(list1.empty(), false);
+  EXPECT_EQ(list1.size(), 5);
+  list1.print();  // 0, 0, 0, 0, 0
+  s21::list<int> list2{1, 2, 3, 4};
+  EXPECT_EQ(list2.empty(), false);
+  EXPECT_EQ(list2.size(), 4);
+  list2.print();  // 1, 2, 3, 4
+  list1.swap(list2);
+  EXPECT_EQ(list1.empty(), false);
+  EXPECT_EQ(list1.size(), 4);
+  list1.print();  // 1, 2, 3, 4
+  EXPECT_EQ(list2.empty(), false);
+  EXPECT_EQ(list2.size(), 5);
+  list2.print();  // 0, 0, 0, 0, 0
 }
 
 // TEST(StackTest, ListConstructor) {
