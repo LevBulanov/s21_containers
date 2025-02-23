@@ -52,6 +52,8 @@ class list {
       delete ptr_tmp;
       ptr_tmp = ptr_begin_;
     }
+    ptr_end_->set_next(ptr_end_);
+    ptr_end_->set_previous(ptr_end_);
     size_ = 0;
   };
 
@@ -77,14 +79,54 @@ class list {
     }
   }
 
+  void push_front(const_reference value) {
+    ++size_;
+    node<value_type>* new_node = new node<value_type>;
+    new_node->set_data(value);
+    new_node->set_next(ptr_begin_);
+    new_node->set_previous(ptr_end_);
+    ptr_begin_->set_previous(new_node);
+    ptr_end_->set_next(new_node);
+    ptr_begin_ = new_node;
+  }
+
+  void pop_front() {
+    if (ptr_begin_ != ptr_end_) {
+      --size_;
+      node<value_type>* ptr_tmp = ptr_begin_;
+      ptr_begin_ = ptr_tmp->get_next();
+      ptr_tmp->get_next()->set_previous(ptr_end_);
+      ptr_end_->set_next(ptr_tmp->get_next());
+      delete ptr_tmp;
+    }
+  }
+
+  void swap(list& other) {
+    node<value_type>* begin_tmp = other.ptr_begin_;
+    node<value_type>* end_tmp = other.ptr_end_;
+    size_type size_tmp = other.size_;
+    other.ptr_begin_ = this->ptr_begin_;
+    other.ptr_end_ = this->ptr_end_;
+    other.size_ = this->size_;
+    this->ptr_begin_ = begin_tmp;
+    this->ptr_end_ = end_tmp;
+    this->size_ = size_tmp;
+  }
+
   void print() const {
     std::cout << "{";
     node<value_type>* ptr = ptr_begin_;
     while (ptr != ptr_end_) {
       std::cout << ptr->get_data();
+      // std::cout << "data " << ptr->get_data() << " prev "
+      //           << ptr->get_previous()->get_data() << " next "
+      //           << ptr->get_next()->get_data() << std::endl;
       ptr = ptr->get_next();
       if (ptr != ptr_end_) std::cout << ", ";
-    }
+    };
+    // std::cout << "END: " << ptr_end_->get_data() << " prev "
+    //           << ptr_end_->get_previous()->get_data() << " next "
+    //           << ptr_end_->get_next()->get_data() << std::endl;
     std::cout << "}" << std::endl;
   }
 };

@@ -3,63 +3,104 @@
 #include "../s21_list.h"
 #include "gtest/gtest.h"
 
-TEST(ListTest, EmptyList1) {
+TEST(ListTest, PushBack) {
   s21::list<int> list1;
   EXPECT_EQ(list1.empty(), true);
   EXPECT_EQ(list1.size(), 0);
   list1.pop_back();
-  // EXPECT_EQ(list1.empty(), true);
-  // EXPECT_EQ(list1.size(), 0);
   list1.push_back(10);
   EXPECT_EQ(list1.size(), 1);
   list1.push_back(20);
   EXPECT_EQ(list1.size(), 2);
   EXPECT_EQ(list1.empty(), false);
-  list1.print();
+  list1.print();  // 10, 20
   list1.pop_back();
   EXPECT_EQ(list1.size(), 1);
   list1.push_back(30);
-  list1.print();
-  // EXPECT_EQ(list1.top(), 10);
-  // EXPECT_EQ(list1.empty(), false);
-  // EXPECT_EQ(list1.size(), 1);
-  // list1.pop();
-  // EXPECT_EQ(list1.empty(), true);
-  // EXPECT_EQ(list1.size(), 0);
+  list1.print();  // 10, 30
   list1.clear();
   list1.pop_back();
   EXPECT_EQ(list1.empty(), true);
   EXPECT_EQ(list1.size(), 0);
-  list1.print();
+  list1.print();  // {}
   list1.push_back(10);
   list1.push_back(20);
   EXPECT_EQ(list1.empty(), false);
   EXPECT_EQ(list1.size(), 2);
-  list1.print();
+  list1.print();  // 10, 20
   list1.clear();
   EXPECT_EQ(list1.size(), 0);
 }
 
-// TEST(StackTest, EmptyStack2) {
-//   std::string str1 = "hello";
-//   std::string str2 = "world";
-//   std::string str3 = "!!!";
-//   s21::list<std::string> list1;
-//   EXPECT_EQ(list1.empty(), true);
-//   EXPECT_EQ(list1.size(), 0);
-//   list1.push(str1);
-//   EXPECT_EQ(list1.top(), str1);
-//   EXPECT_EQ(list1.empty(), false);
-//   EXPECT_EQ(list1.size(), 1);
-//   list1.push(str2);
-//   list1.push(str3);
-//   EXPECT_EQ(list1.size(), 3);
-//   EXPECT_EQ(list1.top(), str3);
-//   list1.pop();
-//   EXPECT_EQ(list1.empty(), false);
-//   EXPECT_EQ(list1.size(), 2);
-//   EXPECT_EQ(list1.top(), str2);
-// }
+TEST(ListTest, PushFront) {
+  s21::list<double> list1;
+  EXPECT_EQ(list1.empty(), true);
+  EXPECT_EQ(list1.size(), 0);
+  list1.pop_front();
+  list1.push_front(20);
+  EXPECT_EQ(list1.size(), 1);
+  list1.push_front(10);
+  EXPECT_EQ(list1.size(), 2);
+  EXPECT_EQ(list1.empty(), false);
+  list1.print();  // 10, 20
+  list1.pop_front();
+  EXPECT_EQ(list1.size(), 1);
+  list1.push_front(1);
+  list1.print();  // 1, 20
+  list1.clear();
+  list1.pop_front();
+  EXPECT_EQ(list1.empty(), true);
+  EXPECT_EQ(list1.size(), 0);
+  list1.print();  // {}
+  list1.push_front(20);
+  list1.push_front(10);
+  EXPECT_EQ(list1.empty(), false);
+  EXPECT_EQ(list1.size(), 2);
+  list1.print();  // 10, 20
+  list1.clear();
+}
+
+TEST(ListTest, PushMix) {
+  s21::list<double> list1;
+  EXPECT_EQ(list1.empty(), true);
+  EXPECT_EQ(list1.size(), 0);
+  list1.push_front(10);
+  list1.push_back(20);
+  list1.push_front(1);
+  list1.push_back(30);
+  EXPECT_EQ(list1.size(), 4);
+  EXPECT_EQ(list1.empty(), false);
+  list1.print();  // 1, 10, 20, 30
+  list1.pop_front();
+  list1.print();  // 10, 20, 30
+  list1.pop_back();
+  list1.print();  // 10, 20
+  list1.pop_front();
+  list1.pop_back();
+  EXPECT_EQ(list1.empty(), true);
+  EXPECT_EQ(list1.size(), 0);
+}
+
+TEST(ListTest, Swap) {
+  s21::list<double> list1;
+  // EXPECT_EQ(list1.empty(), true);
+  // EXPECT_EQ(list1.size(), 0);
+  // list1.push_front(10);
+  // list1.push_back(20);
+  // list1.push_front(1);
+  // list1.push_back(30);
+  // EXPECT_EQ(list1.size(), 4);
+  // EXPECT_EQ(list1.empty(), false);
+  // list1.print();  // 1, 10, 20, 30
+  // list1.pop_front();
+  // list1.print();  // 10, 20, 30
+  // list1.pop_back();
+  // list1.print();  // 10, 20
+  // list1.pop_front();
+  // list1.pop_back();
+  // EXPECT_EQ(list1.empty(), true);
+  // EXPECT_EQ(list1.size(), 0);
+}
 
 // TEST(StackTest, ListConstructor) {
 //   s21::list<char> list1{'a', 'b', 'c', 'd'};
