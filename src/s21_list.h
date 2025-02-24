@@ -7,15 +7,6 @@
 
 namespace s21 {
 
-// template <typename value_type>
-// class ListIterator
-//     : public std::iterator<std:: , value_type> {
-//  public:
-
-//  private:
-//   node<value_type>* ptr_;
-// };
-
 template <typename T>
 class list {
  public:
@@ -28,7 +19,14 @@ class list {
     explicit ListIterator(node<value_type>* p) : ptr_(p) {};
     explicit ListIterator(const ListIterator& it) : ptr_(it.ptr_) {};
 
-    ListIterator& operator=(const ListIterator& it) { ptr_ = it.ptr_; }
+    ListIterator& operator=(const ListIterator& it) {
+      ptr_ = it.ptr_;
+      return *this;
+    }
+    const_reference operator=(const_reference data) {
+      ptr_->set_data(data);
+      return data;
+    }
     bool operator==(ListIterator const& other) const {
       return ptr_ == other.ptr_;
     };
@@ -43,6 +41,8 @@ class list {
       ptr_ = ptr_->get_previous();
       return *this;
     };
+    // как вариант, добавить для node признак, что это заглушка и проверять его
+    // дефолт для заглушки выдает значение последнего элемента перед заглушкой
     value_type& operator*() const { return ptr_->get_data(); };
 
    private:
@@ -82,12 +82,9 @@ class list {
   // copy assignment operator
   list& operator=(const list& l) {
     this->clear();
-    node<value_type>* ptr_l = l.ptr_begin_;
-    if (!l.empty()) {
-      while (ptr_l != l.ptr_end_) {
-        this->push_back(ptr_l->get_data());
-        ptr_l = ptr_l->get_next();
-      };
+    const_iterator l_end = l.end();
+    for (iterator it = l.begin(); it != l_end; ++it) {
+      this->push_back(*it);
     };
     return *this;
   }
@@ -99,10 +96,16 @@ class list {
     return *this;
   }
 
+  const_reference front() { return *(this->begin()); }
+  const_reference back() { return *(--this->end()); }
+
   iterator begin() const { return iterator(ptr_end_->get_next()); }
   iterator end() const { return iterator(ptr_end_); }
 
-  bool empty() const { return ptr_begin_ == ptr_end_; }
+  bool empty() const {
+    return ptr_end_->get_next() == ptr_end_ &&
+           ptr_end_->get_previous() == ptr_end_;
+  }
 
   size_type size() const { return size_; }
 
@@ -130,7 +133,7 @@ class list {
   }
 
   void pop_back() {
-    if (ptr_begin_ != ptr_end_) {
+    if (!this->empty()) {
       --size_;
       node<value_type>* ptr_tmp = ptr_end_->get_previous();
       if (ptr_begin_ == ptr_tmp) ptr_begin_ = ptr_end_;
@@ -152,9 +155,9 @@ class list {
   }
 
   void pop_front() {
-    if (ptr_begin_ != ptr_end_) {
+    if (!this->empty()) {
       --size_;
-      node<value_type>* ptr_tmp = ptr_begin_;
+      node<value_type>* ptr_tmp = ptr_end_->get_next();
       ptr_begin_ = ptr_tmp->get_next();
       ptr_tmp->get_next()->set_previous(ptr_end_);
       ptr_end_->set_next(ptr_tmp->get_next());
@@ -175,7 +178,7 @@ class list {
   }
 
   void reverse() {
-    node<value_type>* ptr = ptr_begin_;
+    node<value_type>* ptr = ptr_end_->get_next();
     node<value_type>* ptr_tmp = nullptr;
     while (ptr != ptr_end_) {
       ptr_tmp = ptr->get_next();
@@ -190,21 +193,11 @@ class list {
   }
 
   void print() const {
-    // std::cout << "{";
-    // node<value_type>* ptr = ptr_begin_;
-    // while (ptr != ptr_end_) {
-    //   std::cout << ptr->get_data();
-    //   ptr = ptr->get_next();
-    //   if (ptr != ptr_end_) std::cout << ", ";
-    // };
-    // std::cout << "}" << std::endl;
     std::cout << "{";
-    iterator ptr = this->begin();
-    while (ptr != this->end()) {
-      std::cout << *ptr;
-      ++ptr;
-      if (ptr != this->end()) std::cout << ", ";
-    };
+    const_iterator p_end = this->end();
+    for (iterator ptr = this->begin(); ptr != p_end; ++ptr) {
+      std::cout << *ptr << ", ";
+    }
     std::cout << "}" << std::endl;
   }
 

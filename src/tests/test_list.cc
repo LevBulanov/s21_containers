@@ -100,6 +100,9 @@ TEST(ListTest, Copy) {
   EXPECT_EQ(list1.size(), 4);
   EXPECT_EQ(list1.empty(), false);
   list1.print();  // A, b, c, Z
+  list2.clear();
+  list1 = list2;
+  list1.print();  // {}
 }
 
 TEST(ListTest, Move) {
@@ -159,6 +162,31 @@ TEST(ListTest, Reverse) {
   EXPECT_EQ(list1.empty(), true);
   EXPECT_EQ(list1.size(), 0);
   list1.reverse();
+}
+
+TEST(ListTest, FrontBack) {
+  s21::list<char> list1{'a', 'b', 'c', 'd'};
+  EXPECT_EQ(list1.front(), 'a');
+  EXPECT_EQ(list1.back(), 'd');
+  s21::list<int> list2;
+  EXPECT_EQ(list2.front(), 0);
+  EXPECT_EQ(list2.back(), 0);
+}
+
+TEST(ListTest, Iterator) {
+  s21::list<char> list1{'a', 'b', 'c', 'd'};
+  auto it = list1.begin();
+  EXPECT_EQ(list1.begin(), it);
+  EXPECT_EQ(list1.front(), *it);
+  ++it;
+  EXPECT_EQ(*it, 'b');
+  ++it;
+  EXPECT_EQ(*it, 'c');
+  ++it;
+  EXPECT_EQ(*it, list1.back());
+  --it;
+  EXPECT_EQ(*it, 'c');
+  EXPECT_NE(*it, list1.back());
 }
 
 int main(int argc, char **argv) {
