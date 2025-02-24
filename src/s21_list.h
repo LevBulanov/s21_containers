@@ -11,30 +11,44 @@ namespace s21 {
 // class ListIterator
 //     : public std::iterator<std:: , value_type> {
 //  public:
-//   ListIterator(value_type* p) : ptr_(p) {};
-//   ListIterator(const ListIterator& it) : ptr_(it.ptr) {};
-
-//   bool operator==(ListIterator const& other) const {
-//     return ptr_ == other.ptr_;
-//   };
-//   bool operator!=(ListIterator const& other) const {
-//     return ptr_ != other.ptr_;
-//   };
-//   ListIterator operator++() { return ptr_->get_next(); };
-//   ListIterator operator--() { return ptr_->get_previous(); };
-//   value_type operator*() { return ptr_->get_data(); };
 
 //  private:
 //   node<value_type>* ptr_;
 // };
 
-template <typename value_type>
+template <typename T>
 class list {
  public:
+  typedef T value_type;
   typedef value_type& reference;
   typedef const value_type& const_reference;
   typedef size_t size_type;
-  typedef ListIterator<value_type> iterator;
+  typedef class ListIterator {
+   public:
+    explicit ListIterator(node<value_type>* p) : ptr_(p) {};
+    explicit ListIterator(const ListIterator& it) : ptr_(it.ptr_) {};
+
+    ListIterator& operator=(const ListIterator& it) { ptr_ = it.ptr_; }
+    bool operator==(ListIterator const& other) const {
+      return ptr_ == other.ptr_;
+    };
+    bool operator!=(ListIterator const& other) const {
+      return ptr_ != other.ptr_;
+    };
+    ListIterator& operator++() {
+      ptr_ = ptr_->get_next();
+      return *this;
+    };
+    ListIterator& operator--() {
+      ptr_ = ptr_->get_previous();
+      return *this;
+    };
+    value_type& operator*() const { return ptr_->get_data(); };
+
+   private:
+    node<value_type>* ptr_;
+  } iterator;
+  typedef const iterator const_iterator;
 
   // default constructor, creates empty stack
   list() {
@@ -45,7 +59,6 @@ class list {
     ptr_begin_ = new_node;
     ptr_end_ = new_node;
     size_ = 0;
-    // it(ptr_begin_);
   }
   // parameterized constructor, creates the list of size n
   explicit list(size_type n) : list() {
@@ -68,7 +81,6 @@ class list {
   }
   // copy assignment operator
   list& operator=(const list& l) {
-    // std::cout << "Copy assignment" << std::endl;
     this->clear();
     node<value_type>* ptr_l = l.ptr_begin_;
     if (!l.empty()) {
@@ -82,15 +94,17 @@ class list {
 
   // move assignment operator
   list& operator=(list&& l) {
-    // std::cout << "Move assignment" << std::endl;
     this->clear();
     this->swap(l);
     return *this;
   }
 
-  bool empty() const { return ptr_begin_ == ptr_end_; };
+  iterator begin() const { return iterator(ptr_end_->get_next()); }
+  iterator end() const { return iterator(ptr_end_); }
 
-  size_type size() const { return size_; };
+  bool empty() const { return ptr_begin_ == ptr_end_; }
+
+  size_type size() const { return size_; }
 
   void clear() {
     node<value_type>* ptr_tmp = ptr_begin_;
@@ -102,7 +116,7 @@ class list {
     ptr_end_->set_next(ptr_end_);
     ptr_end_->set_previous(ptr_end_);
     size_ = 0;
-  };
+  }
 
   void push_back(const_reference value) {
     ++size_;
@@ -176,19 +190,21 @@ class list {
   }
 
   void print() const {
+    // std::cout << "{";
+    // node<value_type>* ptr = ptr_begin_;
+    // while (ptr != ptr_end_) {
+    //   std::cout << ptr->get_data();
+    //   ptr = ptr->get_next();
+    //   if (ptr != ptr_end_) std::cout << ", ";
+    // };
+    // std::cout << "}" << std::endl;
     std::cout << "{";
-    node<value_type>* ptr = ptr_begin_;
-    while (ptr != ptr_end_) {
-      std::cout << ptr->get_data();
-      // std::cout << "data " << ptr->get_data() << " prev "
-      //           << ptr->get_previous()->get_data() << " next "
-      //           << ptr->get_next()->get_data() << std::endl;
-      ptr = ptr->get_next();
-      if (ptr != ptr_end_) std::cout << ", ";
+    iterator ptr = this->begin();
+    while (ptr != this->end()) {
+      std::cout << *ptr;
+      ++ptr;
+      if (ptr != this->end()) std::cout << ", ";
     };
-    // std::cout << "END: " << ptr_end_->get_data() << " prev "
-    //           << ptr_end_->get_previous()->get_data() << " next "
-    //           << ptr_end_->get_next()->get_data() << std::endl;
     std::cout << "}" << std::endl;
   }
 
@@ -196,7 +212,6 @@ class list {
   node<value_type>* ptr_begin_;
   node<value_type>* ptr_end_;
   size_type size_;
-  // iterator it;
 };
 
 }  // namespace s21
