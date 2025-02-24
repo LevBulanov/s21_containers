@@ -22,7 +22,7 @@ class queue {
         ~queue() = default;
 
 
-        queue& operator=(queue &&q) {
+        queue& operator=(queue &&q) noexcept {
             if (this != &q) {
                 container_ = std::move(q.container_);
             }
@@ -36,6 +36,32 @@ class queue {
         const_reference back() const {
             return container_.back();
         }
+
+        bool empty() const {
+            return container_.empty();
+        }
+
+        size_type size() const {
+            return container_.size();
+        }
+
+        void push(const_reference value) {
+            container_.push_back(value);
+        }
+
+        void pop() {
+            container_.pop_front();
+        }
+
+        void swap(queue& other) {
+            container_.swap(other.container_);
+        }
+
+        template <typename... Args> //change to instert many back
+        void emplace(Args&&... args) {
+            container_.emplace_back(std::forward<Args>(args)...); //change to insert_many_back
+        }
+
 
     private:
         std::list<value_type> container_;
