@@ -2,7 +2,6 @@
 #define S21_CONTAINERS_STACK_H
 
 #include <initializer_list>
-#include <iostream>
 #include <stdexcept>
 
 #include "s21_containers_common.h"
@@ -11,24 +10,11 @@ namespace s21 {
 
 template <typename value_type>
 class stack {
- private:
+ public:
   typedef value_type& reference;
   typedef const value_type& const_reference;
   typedef size_t size_type;
-  node<value_type>* ptr_top_ = nullptr;
-  size_type size_ = 0;
 
-  void clear() {
-    node<value_type>* ptr_tmp = ptr_top_;
-    while (ptr_top_ != nullptr) {
-      ptr_top_ = ptr_tmp->get_next();
-      delete ptr_tmp;
-      ptr_tmp = ptr_top_;
-    }
-    size_ = 0;
-  }
-
- public:
   // default constructor, creates empty stack
   stack() : ptr_top_(nullptr), size_(0) {}
   // initializer list constructor
@@ -43,9 +29,9 @@ class stack {
   stack(stack&& s) noexcept : stack() { *this = std::move(s); }
   // destructor
   ~stack() { this->clear(); };
+
   // copy assignment operator
   stack& operator=(const stack& s) {
-    // std::cout << "Copy assignment" << std::endl;
     this->clear();
     node<value_type>* ptr_s = s.ptr_top_;
     if (s.ptr_top_ != nullptr) {
@@ -59,6 +45,7 @@ class stack {
     };
     return *this;
   }
+
   // move assignment operator
   stack& operator=(stack&& s) {
     this->clear();
@@ -68,16 +55,17 @@ class stack {
     s.ptr_top_ = nullptr;
     return *this;
   }
+
   const_reference top() const {
     if (ptr_top_ == nullptr) {
       throw std::range_error("Stack is empty");
     }
     return ptr_top_->get_data();
-  };
+  }
 
-  bool empty() const { return ptr_top_ == nullptr; };
+  bool empty() const { return ptr_top_ == nullptr; }
 
-  size_type size() const { return size_; };
+  size_type size() const { return size_; }
 
   void push(const_reference value) {
     ++size_;
@@ -97,7 +85,7 @@ class stack {
       delete tmp;
       if (ptr_top_ != nullptr) ptr_top_->set_previous(nullptr);
     }
-  };
+  }
 
   void swap(stack& other) {
     node<value_type>* ptr_tmp = other.ptr_top_;
@@ -106,18 +94,21 @@ class stack {
     other.ptr_top_ = this->ptr_top_;
     this->ptr_top_ = ptr_tmp;
     this->size_ = size_tmp;
-  };
+  }
 
-  void print() const {
-    std::cout << "{";
-    node<value_type>* ptr = ptr_top_;
-    while (ptr != nullptr) {
-      std::cout << ptr->get_data();
-      ptr = ptr->get_next();
-      if (ptr != nullptr) std::cout << ", ";
+ private:
+  node<value_type>* ptr_top_ = nullptr;
+  size_type size_ = 0;
+
+  void clear() {
+    node<value_type>* ptr_tmp = ptr_top_;
+    while (ptr_top_ != nullptr) {
+      ptr_top_ = ptr_tmp->get_next();
+      delete ptr_tmp;
+      ptr_tmp = ptr_top_;
     }
-    std::cout << "}" << std::endl;
-  };
+    size_ = 0;
+  }
 };
 
 }  // namespace s21
