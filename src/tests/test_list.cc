@@ -133,6 +133,35 @@ TEST(ListTest, Insert) {
   EXPECT_EQ(list1.back(), 20);
 }
 
+TEST(ListTest, Erase) {
+  s21::list<char> list1{'a', 'b', 'c', 'd', 'e'};
+  auto it = list1.begin();
+  list1.erase(it);
+  EXPECT_EQ(list1.front(), 'b');
+  EXPECT_EQ(list1.size(), 4);
+  it = list1.begin();
+  ++it;
+  list1.erase(it);
+  EXPECT_EQ(list1.front(), 'b');
+  it = list1.begin();
+  ++it;
+  EXPECT_EQ(*it, 'd');
+  it = list1.end();
+  list1.erase(it);
+  EXPECT_EQ(list1.back(), 'e');
+  EXPECT_EQ(list1.size(), 3);
+  --it;
+  list1.erase(it);
+  EXPECT_EQ(list1.back(), 'd');
+  EXPECT_EQ(list1.size(), 2);
+  list1.clear();
+  EXPECT_EQ(list1.size(), 0);
+  it = list1.begin();
+  list1.erase(it);
+  it = list1.begin();
+  EXPECT_EQ(list1.size(), 0);
+}
+
 TEST(ListTest, Copy) {
   s21::list<char> list1{'a', 'b', 'c', 'd'};
   s21::list<char> list2 = list1;

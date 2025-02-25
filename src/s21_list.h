@@ -18,30 +18,31 @@ class list {
    public:
     explicit ListIterator(node<value_type>* p) : ptr_(p) {};
     ListIterator(ListIterator& it) : ptr_(it.ptr_) {};
-    explicit ListIterator(const ListIterator& it) : ptr_(it.ptr_) {};
+    // explicit ListIterator(const ListIterator& it) : ptr_(it.ptr_) {};
 
     ListIterator& operator=(const ListIterator& it) {
       ptr_ = it.ptr_;
       return *this;
     }
-    // ListIterator operator=(ListIterator& it) {
-    //   ptr_ = it.ptr_;
-    //   return *this;
-    // }
+
     const_reference operator=(const_reference data) {
       ptr_->set_data(data);
       return data;
     }
+
     bool operator==(ListIterator const& other) const {
       return ptr_ == other.ptr_;
     };
+
     bool operator!=(ListIterator const& other) const {
       return ptr_ != other.ptr_;
     };
+
     ListIterator& operator++() {
       ptr_ = ptr_->get_next();
       return *this;
     };
+
     ListIterator& operator--() {
       ptr_ = ptr_->get_previous();
       return *this;
@@ -50,7 +51,6 @@ class list {
     // дефолт для заглушки выдает значение последнего элемента перед заглушкой
     value_type& operator*() const { return ptr_->get_data(); };
 
-    // node<value_type>* get_ptr() const { return ptr_;}
     friend class list;
 
    private:
@@ -141,6 +141,18 @@ class list {
     ptr_begin_ = ptr_end_->get_next();
     --pos;
     return pos;
+  }
+
+  void erase(iterator pos) {
+    if (!empty() && pos != end()) {
+      --size_;
+      node<value_type>* prev = pos.ptr_->get_previous();
+      node<value_type>* next = pos.ptr_->get_next();
+      prev->set_next(next);
+      next->set_previous(prev);
+      delete pos.ptr_;
+      ptr_begin_ = ptr_end_->get_next();
+    }
   }
 
   void push_back(const_reference value) {
