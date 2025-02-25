@@ -17,12 +17,17 @@ class list {
   typedef class ListIterator {
    public:
     explicit ListIterator(node<value_type>* p) : ptr_(p) {};
+    ListIterator(ListIterator& it) : ptr_(it.ptr_) {};
     explicit ListIterator(const ListIterator& it) : ptr_(it.ptr_) {};
 
     ListIterator& operator=(const ListIterator& it) {
       ptr_ = it.ptr_;
       return *this;
     }
+    // ListIterator operator=(ListIterator& it) {
+    //   ptr_ = it.ptr_;
+    //   return *this;
+    // }
     const_reference operator=(const_reference data) {
       ptr_->set_data(data);
       return data;
@@ -44,6 +49,9 @@ class list {
     // как вариант, добавить для node признак, что это заглушка и проверять его
     // дефолт для заглушки выдает значение последнего элемента перед заглушкой
     value_type& operator*() const { return ptr_->get_data(); };
+
+    // node<value_type>* get_ptr() const { return ptr_;}
+    friend class list;
 
    private:
     node<value_type>* ptr_;
@@ -121,19 +129,27 @@ class list {
     size_ = 0;
   }
 
-  void push_back(const_reference value) {
+  iterator insert(iterator pos, const_reference value) {
     ++size_;
     node<value_type>* new_node = new node<value_type>;
+    node<value_type>* prev = pos.ptr_->get_previous();
     new_node->set_data(value);
-    if (ptr_begin_ == ptr_end_) ptr_begin_ = new_node;
-    ptr_end_->get_previous()->set_next(new_node);
-    new_node->set_previous(ptr_end_->get_previous());
-    ptr_end_->set_previous(new_node);
-    new_node->set_next(ptr_end_);
+    new_node->set_next(pos.ptr_);
+    pos.ptr_->set_previous(new_node);
+    new_node->set_previous(prev);
+    prev->set_next(new_node);
+    ptr_begin_ = ptr_end_->get_next();
+    --pos;
+    return pos;
+  }
+
+  void push_back(const_reference value) {
+    auto pos = end();
+    insert(pos, value);
   }
 
   void pop_back() {
-    if (!this->empty()) {
+    if (!empty()) {
       --size_;
       node<value_type>* ptr_tmp = ptr_end_->get_previous();
       if (ptr_begin_ == ptr_tmp) ptr_begin_ = ptr_end_;
@@ -144,18 +160,12 @@ class list {
   }
 
   void push_front(const_reference value) {
-    ++size_;
-    node<value_type>* new_node = new node<value_type>;
-    new_node->set_data(value);
-    new_node->set_next(ptr_begin_);
-    new_node->set_previous(ptr_end_);
-    ptr_begin_->set_previous(new_node);
-    ptr_end_->set_next(new_node);
-    ptr_begin_ = new_node;
+    auto pos = begin();
+    insert(pos, value);
   }
 
   void pop_front() {
-    if (!this->empty()) {
+    if (!empty()) {
       --size_;
       node<value_type>* ptr_tmp = ptr_end_->get_next();
       ptr_begin_ = ptr_tmp->get_next();
@@ -169,12 +179,12 @@ class list {
     node<value_type>* begin_tmp = other.ptr_begin_;
     node<value_type>* end_tmp = other.ptr_end_;
     size_type size_tmp = other.size_;
-    other.ptr_begin_ = this->ptr_begin_;
-    other.ptr_end_ = this->ptr_end_;
-    other.size_ = this->size_;
-    this->ptr_begin_ = begin_tmp;
-    this->ptr_end_ = end_tmp;
-    this->size_ = size_tmp;
+    other.ptr_begin_ = ptr_begin_;
+    other.ptr_end_ = ptr_end_;
+    other.size_ = size_;
+    ptr_begin_ = begin_tmp;
+    ptr_end_ = end_tmp;
+    size_ = size_tmp;
   }
 
   void reverse() {
@@ -194,8 +204,8 @@ class list {
 
   void print() const {
     std::cout << "{";
-    const_iterator p_end = this->end();
-    for (iterator ptr = this->begin(); ptr != p_end; ++ptr) {
+    const_iterator p_end = end();
+    for (iterator ptr = begin(); ptr != p_end; ++ptr) {
       std::cout << *ptr << ", ";
     }
     std::cout << "}" << std::endl;

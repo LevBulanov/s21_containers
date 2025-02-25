@@ -111,6 +111,28 @@ TEST(ListTest, PushMix) {
   EXPECT_EQ(list1.size(), 0);
 }
 
+TEST(ListTest, Insert) {
+  s21::list<int> list1;
+  EXPECT_EQ(list1.empty(), true);
+  EXPECT_EQ(list1.size(), 0);
+  auto it = list1.begin();
+  it = list1.insert(it, 10);
+  EXPECT_EQ(list1.front(), 10);
+  EXPECT_EQ(*it, 10);
+  it = list1.insert(it, 1);
+  EXPECT_EQ(list1.front(), 1);
+  EXPECT_EQ(*it, 1);
+  ++it;
+  EXPECT_EQ(*it, 10);
+  it = list1.insert(it, 5);
+  EXPECT_EQ(*it, 5);
+  ++it;
+  EXPECT_EQ(*it, 10);
+  it = list1.end();
+  it = list1.insert(it, 20);
+  EXPECT_EQ(list1.back(), 20);
+}
+
 TEST(ListTest, Copy) {
   s21::list<char> list1{'a', 'b', 'c', 'd'};
   s21::list<char> list2 = list1;
