@@ -118,15 +118,14 @@ class list {
   size_type size() const { return size_; }
 
   void clear() {
-    node<value_type>* ptr_tmp = ptr_begin_;
-    while (ptr_begin_ != ptr_end_) {
-      ptr_begin_ = ptr_tmp->get_next();
-      delete ptr_tmp;
-      ptr_tmp = ptr_begin_;
+    iterator it1 = begin();
+    iterator it2 = it1;
+    const_iterator it_end = end();
+    while (it1 != it_end) {
+      ++it1;
+      erase(it2);
+      it2 = it1;
     }
-    ptr_end_->set_next(ptr_end_);
-    ptr_end_->set_previous(ptr_end_);
-    size_ = 0;
   }
 
   iterator insert(iterator pos, const_reference value) {
@@ -161,14 +160,8 @@ class list {
   }
 
   void pop_back() {
-    if (!empty()) {
-      --size_;
-      node<value_type>* ptr_tmp = ptr_end_->get_previous();
-      if (ptr_begin_ == ptr_tmp) ptr_begin_ = ptr_end_;
-      ptr_tmp->get_previous()->set_next(ptr_tmp->get_next());
-      ptr_end_->set_previous(ptr_tmp->get_previous());
-      delete ptr_tmp;
-    }
+    auto pos = --end();
+    erase(pos);
   }
 
   void push_front(const_reference value) {
@@ -177,14 +170,8 @@ class list {
   }
 
   void pop_front() {
-    if (!empty()) {
-      --size_;
-      node<value_type>* ptr_tmp = ptr_end_->get_next();
-      ptr_begin_ = ptr_tmp->get_next();
-      ptr_tmp->get_next()->set_previous(ptr_end_);
-      ptr_end_->set_next(ptr_tmp->get_next());
-      delete ptr_tmp;
-    }
+    auto pos = begin();
+    erase(pos);
   }
 
   void swap(list& other) {

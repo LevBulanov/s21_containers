@@ -59,6 +59,8 @@ TEST(ListTest, PushBack) {
   EXPECT_EQ(list1.size(), 2);
   list1.clear();
   EXPECT_EQ(list1.size(), 0);
+  list1.clear();
+  EXPECT_EQ(list1.size(), 0);
 }
 
 TEST(ListTest, PushFront) {
