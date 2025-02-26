@@ -17,7 +17,7 @@ class list {
    public:
     explicit ListIterator(node<value_type>* p) : ptr_(p) {};
     ListIterator(ListIterator& it) : ptr_(it.ptr_) {};
-    // explicit ListIterator(const ListIterator& it) : ptr_(it.ptr_) {};
+    ListIterator(const ListIterator& it) : ptr_(it.ptr_) {};
 
     ListIterator& operator=(const ListIterator& it) {
       ptr_ = it.ptr_;
@@ -181,6 +181,19 @@ class list {
     ptr_begin_ = begin_tmp;
     ptr_end_ = end_tmp;
     size_ = size_tmp;
+  }
+
+  void splice(const_iterator pos, list& other) {
+    iterator this_it = pos;
+    iterator other_it = other.begin();
+    iterator del_it = other_it;
+    iterator end_it = other.end();
+    while (other_it != end_it) {
+      del_it = other_it;
+      insert(pos, *other_it);
+      ++other_it;
+      other.erase(del_it);
+    }
   }
 
   void reverse() {
