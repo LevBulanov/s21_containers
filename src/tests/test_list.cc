@@ -258,6 +258,20 @@ TEST(ListTest, Reverse) {
   list1.reverse();
 }
 
+TEST(ListTest, Unique) {
+  s21::list<int> list1{1, 1, 2, 3, 1, 3, 3, 2, 2};
+  list1.unique();
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 1);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 2);
+  ++it;
+  EXPECT_EQ(it, list1.end());
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

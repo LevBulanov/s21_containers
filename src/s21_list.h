@@ -1,7 +1,6 @@
 #include <initializer_list>
 #include <iostream>
-#include <iterator>
-#include <stdexcept>
+// #include <stdexcept>
 
 #include "s21_containers_common.h"
 
@@ -25,11 +24,6 @@ class list {
       return *this;
     }
 
-    const_reference operator=(const_reference data) {
-      ptr_->set_data(data);
-      return data;
-    }
-
     bool operator==(ListIterator const& other) const {
       return ptr_ == other.ptr_;
     };
@@ -47,8 +41,7 @@ class list {
       ptr_ = ptr_->get_previous();
       return *this;
     };
-    // как вариант, добавить для node признак, что это заглушка и проверять его
-    // дефолт для заглушки выдает значение последнего элемента перед заглушкой
+
     value_type& operator*() const { return ptr_->get_data(); };
 
     friend class list;
@@ -104,19 +97,22 @@ class list {
     return *this;
   }
 
+  // List Element access
   const_reference front() { return *(this->begin()); }
   const_reference back() { return *(--this->end()); }
 
+  // List Iterators
   iterator begin() const { return iterator(ptr_end_->get_next()); }
   iterator end() const { return iterator(ptr_end_); }
 
+  // List Capacity
   bool empty() const {
     return ptr_end_->get_next() == ptr_end_ &&
            ptr_end_->get_previous() == ptr_end_;
   }
-
   size_type size() const { return size_; }
 
+  // List Modifiers
   void clear() {
     iterator it1 = begin();
     iterator it2 = it1;
@@ -143,7 +139,8 @@ class list {
   }
 
   void erase(iterator pos) {
-    if (!empty() && pos != end()) {
+    const_iterator it_end = end();
+    if (!empty() && pos != it_end) {
       --size_;
       node<value_type>* prev = pos.ptr_->get_previous();
       node<value_type>* next = pos.ptr_->get_next();
@@ -199,6 +196,26 @@ class list {
     ptr_tmp = ptr_end_->get_next();
     ptr_end_->set_next(ptr_end_->get_previous());
     ptr_end_->set_previous(ptr_tmp);
+  }
+
+  void unique() {
+    if (!empty()) {
+      iterator it = begin();
+      iterator del_it = it;
+      const_iterator it_end = end();
+      value_type data = *it;
+      ++it;
+      while (it != it_end) {
+        if (*it == data) {
+          del_it = it;
+          ++it;
+          erase(del_it);
+        } else {
+          data = *it;
+          ++it;
+        }
+      }
+    }
   }
 
   void print() const {
