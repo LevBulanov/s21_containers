@@ -57,7 +57,6 @@ class list {
     new_node->set_data({0});
     new_node->set_next(new_node);
     new_node->set_previous(new_node);
-    ptr_begin_ = new_node;
     ptr_end_ = new_node;
     size_ = 0;
   }
@@ -133,7 +132,6 @@ class list {
     pos.ptr_->set_previous(new_node);
     new_node->set_previous(prev);
     prev->set_next(new_node);
-    ptr_begin_ = ptr_end_->get_next();
     --pos;
     return pos;
   }
@@ -147,7 +145,6 @@ class list {
       prev->set_next(next);
       next->set_previous(prev);
       delete pos.ptr_;
-      ptr_begin_ = ptr_end_->get_next();
     }
   }
 
@@ -172,13 +169,10 @@ class list {
   }
 
   void swap(list& other) {
-    node<value_type>* begin_tmp = other.ptr_begin_;
     node<value_type>* end_tmp = other.ptr_end_;
     size_type size_tmp = other.size_;
-    other.ptr_begin_ = ptr_begin_;
     other.ptr_end_ = ptr_end_;
     other.size_ = size_;
-    ptr_begin_ = begin_tmp;
     ptr_end_ = end_tmp;
     size_ = size_tmp;
   }
@@ -190,7 +184,7 @@ class list {
     iterator end_it = other.end();
     while (other_it != end_it) {
       del_it = other_it;
-      insert(pos, *other_it);
+      insert(this_it, *other_it);
       ++other_it;
       other.erase(del_it);
     }
@@ -205,7 +199,6 @@ class list {
       ptr->set_previous(ptr_tmp);
       ptr = ptr_tmp;
     }
-    ptr_begin_ = ptr_end_->get_previous();
     ptr_tmp = ptr_end_->get_next();
     ptr_end_->set_next(ptr_end_->get_previous());
     ptr_end_->set_previous(ptr_tmp);
@@ -241,7 +234,6 @@ class list {
   }
 
  private:
-  node<value_type>* ptr_begin_;
   node<value_type>* ptr_end_;
   size_type size_;
 };
