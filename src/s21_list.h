@@ -177,16 +177,39 @@ class list {
     size_ = size_tmp;
   }
 
-  void splice(const_iterator pos, list& other) {
-    iterator this_it = pos;
+  void merge(list& other) {
+    iterator this_it = begin();
     iterator other_it = other.begin();
-    iterator del_it = other_it;
-    iterator end_it = other.end();
+    iterator move_it = other_it;
+    const_iterator end_this_it = end();
+    const_iterator end_other_it = other.end();
+    while (this_it != end_this_it && other_it != end_other_it) {
+      if (*this_it <= *other_it) {
+        ++this_it;
+      } else {
+        ++size_;
+        --other.size_;
+        move_it = other_it;
+        ++other_it;
+        transfer(this_it, move_it);
+      }
+    }
+    if (other_it != end_other_it) splice(this_it, other);
+  }
+
+  void splice(const_iterator pos, list& other) {
+    iterator other_it = other.begin();
+    iterator move_it = other_it;
+    const_iterator end_it = other.end();
     while (other_it != end_it) {
-      del_it = other_it;
-      insert(this_it, *other_it);
+      move_it = other_it;
       ++other_it;
-      other.erase(del_it);
+      transfer(pos, move_it);
+      ++size_;
+      --other.size_;
+      // insert(pos, *other_it);
+      // ++other_it;
+      // other.erase(del_it);
     }
   }
 
@@ -234,6 +257,17 @@ class list {
   }
 
  private:
+  void transfer(const_iterator pos, const_iterator src) {
+    src.ptr_->get_previous()->set_next(src.ptr_->get_next());
+    src.ptr_->get_next()->set_previous(src.ptr_->get_previous());
+
+    src.ptr_->set_next(pos.ptr_);
+    src.ptr_->set_previous(pos.ptr_->get_previous());
+
+    pos.ptr_->get_previous()->set_next(src.ptr_);
+    pos.ptr_->set_previous(src.ptr_);
+  }
+
   node<value_type>* ptr_end_;
   size_type size_;
 };

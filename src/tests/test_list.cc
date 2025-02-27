@@ -320,6 +320,74 @@ TEST(ListTest, Splice3) {
   EXPECT_EQ(list1.size(), 0);
 }
 
+TEST(ListTest, Merge1) {
+  s21::list<int> list1{1, 2, 3, 4};
+  s21::list<int> list2;
+  list1.merge(list2);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  ++it;
+  EXPECT_EQ(it, list1.end());
+  EXPECT_EQ(list1.size(), 4);
+  EXPECT_EQ(list2.size(), 0);
+}
+
+TEST(ListTest, Merge2) {
+  s21::list<int> list1{1, 2, 3, 4};
+  s21::list<int> list2;
+  list2.merge(list1);
+  auto it = list2.begin();
+  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  ++it;
+  EXPECT_EQ(it, list2.end());
+  EXPECT_EQ(list2.size(), 4);
+  EXPECT_EQ(list1.size(), 0);
+}
+
+TEST(ListTest, Merge3) {
+  s21::list<int> list1{1, 3, 4, 5};
+  s21::list<int> list2{0, 2, 10, 20};
+  list2.merge(list1);
+  auto it = list2.begin();
+  EXPECT_EQ(*it, 0);
+  EXPECT_EQ(*(++it), 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  EXPECT_EQ(*(++it), 5);
+  EXPECT_EQ(*(++it), 10);
+  EXPECT_EQ(*(++it), 20);
+  ++it;
+  EXPECT_EQ(it, list2.end());
+  EXPECT_EQ(list2.size(), 8);
+  EXPECT_EQ(list1.size(), 0);
+}
+
+TEST(ListTest, Merge4) {
+  s21::list<int> list1{0, 2, 10, 20};
+  s21::list<int> list2{1, 3, 4, 5};
+  list2.merge(list1);
+  auto it = list2.begin();
+  EXPECT_EQ(*it, 0);
+  EXPECT_EQ(*(++it), 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  EXPECT_EQ(*(++it), 5);
+  EXPECT_EQ(*(++it), 10);
+  EXPECT_EQ(*(++it), 20);
+  ++it;
+  EXPECT_EQ(it, list2.end());
+  EXPECT_EQ(list2.size(), 8);
+  EXPECT_EQ(list1.size(), 0);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
