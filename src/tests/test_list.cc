@@ -388,6 +388,44 @@ TEST(ListTest, Merge4) {
   EXPECT_EQ(list1.size(), 0);
 }
 
+TEST(ListTest, Sort1) {
+  s21::list<int> list1;
+  list1.sort();
+  EXPECT_EQ(list1.size(), 0);
+}
+
+TEST(ListTest, Sort2) {
+  s21::list<int> list1{1};
+  list1.sort();
+  EXPECT_EQ(list1.size(), 1);
+  EXPECT_EQ(list1.front(), 1);
+}
+
+TEST(ListTest, Sort3) {
+  s21::list<int> list1{5, 2, 1, 3, 4};
+  list1.sort();
+  EXPECT_EQ(list1.size(), 5);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  EXPECT_EQ(*(++it), 5);
+}
+
+TEST(ListTest, Sort4) {
+  s21::list<char> list1{'z', 'y', 'x', 'c', 'b', 'a'};
+  list1.sort();
+  EXPECT_EQ(list1.size(), 6);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'x');
+  EXPECT_EQ(*(++it), 'y');
+  EXPECT_EQ(*(++it), 'z');
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

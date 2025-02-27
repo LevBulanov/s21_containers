@@ -247,6 +247,8 @@ class list {
     }
   }
 
+  void sort() { qsort(begin(), end()); };
+
   void print() const {
     std::cout << "{";
     const_iterator p_end = end();
@@ -266,6 +268,23 @@ class list {
 
     pos.ptr_->get_previous()->set_next(src.ptr_);
     pos.ptr_->set_previous(src.ptr_);
+  }
+
+  void qsort(const_iterator begin, const_iterator end) {
+    iterator op = end;
+    --op;
+    if (op != begin) {
+      iterator it = begin;
+      while (it != op) {
+        iterator tmp = it;
+        ++it;
+        if (*tmp > *op) {
+          transfer(end, tmp);
+        }
+      }
+      if (op != this->begin()) qsort(this->begin(), op);
+      qsort(op, end);
+    }
   }
 
   node<value_type>* ptr_end_;
