@@ -1,5 +1,6 @@
 #include <initializer_list>
 #include <iostream>
+#include <limits>
 // #include <stdexcept>
 
 #include "s21_containers_common.h"
@@ -19,30 +20,30 @@ class list {
     ListIterator(ListIterator& it) : ptr_(it.ptr_) {};
     ListIterator(const ListIterator& it) : ptr_(it.ptr_) {};
 
-    ListIterator& operator=(const ListIterator& it) {
+    ListIterator& operator=(const ListIterator& it) noexcept {
       ptr_ = it.ptr_;
       return *this;
     }
 
-    bool operator==(ListIterator const& other) const {
+    bool operator==(ListIterator const& other) const noexcept {
       return ptr_ == other.ptr_;
     };
 
-    bool operator!=(ListIterator const& other) const {
+    bool operator!=(ListIterator const& other) const noexcept {
       return ptr_ != other.ptr_;
     };
 
-    ListIterator& operator++() {
+    ListIterator& operator++() noexcept {
       ptr_ = ptr_->get_next();
       return *this;
     };
 
-    ListIterator& operator--() {
+    ListIterator& operator--() noexcept {
       ptr_ = ptr_->get_previous();
       return *this;
     };
 
-    value_type& operator*() const { return ptr_->get_data(); };
+    value_type& operator*() const noexcept { return ptr_->get_data(); };
 
     friend class list;
 
@@ -67,13 +68,13 @@ class list {
   // initializer list constructor
   list(std::initializer_list<value_type> const& items) : list() {
     for (const_reference item : items) {
-      this->push_back(item);
+      push_back(item);
     }
   }
   // copy constructor
   list(const list& l) : list() { *this = l; }
   // move constructor
-  list(list&& l) : list() { *this = std::move(l); }
+  list(list&& l) noexcept : list() { *this = std::move(l); }
   // destructor
   ~list() {
     this->clear();
@@ -84,43 +85,44 @@ class list {
     this->clear();
     const_iterator l_end = l.end();
     for (iterator it = l.begin(); it != l_end; ++it) {
-      this->push_back(*it);
+      push_back(*it);
     };
     return *this;
   }
 
   // move assignment operator
-  list& operator=(list&& l) {
-    this->clear();
-    this->swap(l);
+  list& operator=(list&& l) noexcept {
+    clear();
+    swap(l);
     return *this;
   }
 
   // List Element access
-  const_reference front() { return *(this->begin()); }
-  const_reference back() { return *(--this->end()); }
+  const_reference front() const noexcept { return *(begin()); }
+  const_reference back() const noexcept { return *(--end()); }
 
   // List Iterators
-  iterator begin() const { return iterator(ptr_end_->get_next()); }
-  iterator end() const { return iterator(ptr_end_); }
+  iterator begin() const noexcept { return iterator(ptr_end_->get_next()); }
+  iterator end() const noexcept { return iterator(ptr_end_); }
 
   // List Capacity
-  bool empty() const {
+  bool empty() const noexcept {
     return ptr_end_->get_next() == ptr_end_ &&
            ptr_end_->get_previous() == ptr_end_;
   }
-  size_type size() const { return size_; }
+
+  size_type size() const noexcept { return size_; }
+
+  size_type max_size() const noexcept {
+    return std::numeric_limits<std::size_t>::max() / 2 /
+           sizeof(node<value_type>);
+  }
 
   // List Modifiers
   void clear() {
-    iterator it1 = begin();
-    iterator it2 = it1;
-    const_iterator it_end = end();
-    while (it1 != it_end) {
-      ++it1;
-      erase(it2);
-      it2 = it1;
-    }
+    while (!empty()) {
+      erase(begin());
+    };
   }
 
   iterator insert(iterator pos, const_reference value) {
@@ -168,7 +170,7 @@ class list {
     erase(pos);
   }
 
-  void swap(list& other) {
+  void swap(list& other) noexcept {
     node<value_type>* end_tmp = other.ptr_end_;
     size_type size_tmp = other.size_;
     other.ptr_end_ = ptr_end_;
@@ -177,7 +179,7 @@ class list {
     size_ = size_tmp;
   }
 
-  void merge(list& other) {
+  void merge(list& other) noexcept {
     iterator this_it = begin();
     iterator other_it = other.begin();
     iterator move_it = other_it;
@@ -197,7 +199,7 @@ class list {
     if (other_it != end_other_it) splice(this_it, other);
   }
 
-  void splice(const_iterator pos, list& other) {
+  void splice(const_iterator pos, list& other) noexcept {
     iterator other_it = other.begin();
     iterator move_it = other_it;
     const_iterator end_it = other.end();
@@ -207,13 +209,10 @@ class list {
       transfer(pos, move_it);
       ++size_;
       --other.size_;
-      // insert(pos, *other_it);
-      // ++other_it;
-      // other.erase(del_it);
     }
   }
 
-  void reverse() {
+  void reverse() noexcept {
     node<value_type>* ptr = ptr_end_->get_next();
     node<value_type>* ptr_tmp = nullptr;
     while (ptr != ptr_end_) {
@@ -259,7 +258,7 @@ class list {
   }
 
  private:
-  void transfer(const_iterator pos, const_iterator src) {
+  void transfer(const_iterator pos, const_iterator src) noexcept {
     src.ptr_->get_previous()->set_next(src.ptr_->get_next());
     src.ptr_->get_next()->set_previous(src.ptr_->get_previous());
 
@@ -270,7 +269,7 @@ class list {
     pos.ptr_->set_previous(src.ptr_);
   }
 
-  void qsort(const_iterator begin, const_iterator end) {
+  void qsort(const_iterator begin, const_iterator end) noexcept {
     iterator op = end;
     --op;
     if (op != begin) {

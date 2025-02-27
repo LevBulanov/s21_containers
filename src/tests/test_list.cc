@@ -1,3 +1,4 @@
+#include <list>
 #include <string>
 
 #include "../s21_list.h"
@@ -424,6 +425,12 @@ TEST(ListTest, Sort4) {
   EXPECT_EQ(*(++it), 'x');
   EXPECT_EQ(*(++it), 'y');
   EXPECT_EQ(*(++it), 'z');
+}
+
+TEST(ListTest, MaxSize) {
+  s21::list<double> list1{'z', 'y', 'x', 'c', 'b', 'a'};
+  std::list<double> list_ref{'z', 'y', 'x', 'c', 'b', 'a'};
+  EXPECT_EQ(list1.max_size(), list_ref.max_size());
 }
 
 int main(int argc, char **argv) {
