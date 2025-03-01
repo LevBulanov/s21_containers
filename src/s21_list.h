@@ -257,22 +257,13 @@ class list {
   template <typename... Args>
   void insert_many_back(Args&&... args) {
     iterator pos = end();
-    (insert(end(), std::forward<Args>(args)), ...);
+    (insert(pos, std::forward<Args>(args)), ...);
   }
 
   template <typename... Args>
   void insert_many_front(Args&&... args) {
     iterator pos = begin();
     (insert(pos, std::forward<Args>(args)), ...);
-  }
-
-  void print() const {
-    std::cout << "{";
-    const_iterator p_end = end();
-    for (iterator ptr = begin(); ptr != p_end; ++ptr) {
-      std::cout << *ptr << ", ";
-    }
-    std::cout << "}" << std::endl;
   }
 
  private:
