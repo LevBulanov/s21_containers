@@ -109,6 +109,62 @@ TEST(StackTest, SwapTest1) {
   EXPECT_EQ(stack1.size(), 1);
 }
 
+TEST(StackTest, insertMany1) {
+  s21::stack<char> stack1{'a', 'b'};
+  EXPECT_EQ(stack1.size(), 2);
+  stack1.insert_many_back();
+  EXPECT_EQ(stack1.top(), 'b');
+  EXPECT_EQ(stack1.size(), 2);
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'a');
+}
+
+TEST(StackTest, insertMany2) {
+  s21::stack<char> stack1{'a', 'b'};
+  EXPECT_EQ(stack1.size(), 2);
+  stack1.insert_many_back('c');
+  EXPECT_EQ(stack1.top(), 'c');
+  EXPECT_EQ(stack1.size(), 3);
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'b');
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'a');
+}
+
+TEST(StackTest, insertMany3) {
+  s21::stack<char> stack1{'a', 'b'};
+  EXPECT_EQ(stack1.size(), 2);
+  stack1.insert_many_back('c', 'd');
+  EXPECT_EQ(stack1.top(), 'd');
+  EXPECT_EQ(stack1.size(), 4);
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'c');
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'b');
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'a');
+}
+
+TEST(StackTest, insertMany4) {
+  s21::stack<char> stack1{'a', 'b'};
+  EXPECT_EQ(stack1.size(), 2);
+  stack1.insert_many_back('c', 'd', 'e', 'f', 'g');
+  EXPECT_EQ(stack1.top(), 'g');
+  EXPECT_EQ(stack1.size(), 7);
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'f');
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'e');
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'd');
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'c');
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'b');
+  stack1.pop();
+  EXPECT_EQ(stack1.top(), 'a');
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

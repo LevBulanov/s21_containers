@@ -16,7 +16,7 @@ class stack {
   typedef size_t size_type;
 
   // default constructor, creates empty stack
-  stack() : ptr_top_(nullptr), size_(0) {}
+  stack() noexcept : ptr_top_(nullptr), size_(0) {}
   // initializer list constructor
   stack(std::initializer_list<value_type> const& items) : stack() {
     for (const_reference item : items) {
@@ -63,9 +63,9 @@ class stack {
     return ptr_top_->get_data();
   }
 
-  bool empty() const { return ptr_top_ == nullptr; }
+  bool empty() const noexcept { return ptr_top_ == nullptr; }
 
-  size_type size() const { return size_; }
+  size_type size() const noexcept { return size_; }
 
   void push(const_reference value) {
     ++size_;
@@ -87,13 +87,18 @@ class stack {
     }
   }
 
-  void swap(stack& other) {
+  void swap(stack& other) noexcept {
     node<value_type>* ptr_tmp = other.ptr_top_;
     size_type size_tmp = other.size_;
     other.size_ = this->size_;
     other.ptr_top_ = this->ptr_top_;
     this->ptr_top_ = ptr_tmp;
     this->size_ = size_tmp;
+  }
+
+  template <typename... Args>
+  void insert_many_back(Args&&... args) {
+    (push(std::forward<Args>(args)), ...);
   }
 
  private:
