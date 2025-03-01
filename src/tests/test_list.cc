@@ -433,6 +433,149 @@ TEST(ListTest, MaxSize) {
   EXPECT_EQ(list1.max_size(), list_ref.max_size());
 }
 
+TEST(ListTest, InsertMany1) {
+  s21::list<char> list1{'a', 'b'};
+  auto it = ++list1.begin();
+  list1.insert_many(it);
+  EXPECT_EQ(list1.size(), 2);
+  EXPECT_EQ(*it, 'b');
+  it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+}
+
+TEST(ListTest, InsertMany2) {
+  s21::list<char> list1{'a', 'b'};
+  auto it = ++list1.begin();
+  list1.insert_many(it, 'c');
+  EXPECT_EQ(list1.size(), 3);
+  EXPECT_EQ(*it, 'b');
+  it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'b');
+}
+
+TEST(ListTest, InsertMany3) {
+  s21::list<char> list1{'a', 'b'};
+  auto it = ++list1.begin();
+  list1.insert_many(it, 'c', 'd', 'e');
+  EXPECT_EQ(list1.size(), 5);
+  EXPECT_EQ(*it, 'b');
+  it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'e');
+  EXPECT_EQ(*(++it), 'b');
+}
+
+TEST(ListTest, InsertMany4) {
+  s21::list<char> list1{'a', 'b'};
+  auto it = ++list1.begin();
+  list1.insert_many(it, 'c', 'd', 'e', 'f', 'g');
+  EXPECT_EQ(list1.size(), 7);
+  EXPECT_EQ(*it, 'b');
+  it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'e');
+  EXPECT_EQ(*(++it), 'f');
+  EXPECT_EQ(*(++it), 'g');
+  EXPECT_EQ(*(++it), 'b');
+}
+
+TEST(ListTest, InsertManyBack1) {
+  s21::list<char> list1{'a', 'b'};
+  list1.insert_many_back();
+  EXPECT_EQ(list1.size(), 2);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+}
+
+TEST(ListTest, InsertManyBack2) {
+  s21::list<char> list1{'a', 'b'};
+  list1.insert_many_back('c');
+  EXPECT_EQ(list1.size(), 3);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+}
+
+TEST(ListTest, InsertManyBack3) {
+  s21::list<char> list1{'a', 'b'};
+  list1.insert_many_back('c', 'd', 'e');
+  EXPECT_EQ(list1.size(), 5);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'e');
+}
+
+TEST(ListTest, InsertManyBack4) {
+  s21::list<char> list1{'a', 'b'};
+  list1.insert_many_back('c', 'd', 'e', 'f', 'g');
+  EXPECT_EQ(list1.size(), 7);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'e');
+  EXPECT_EQ(*(++it), 'f');
+  EXPECT_EQ(*(++it), 'g');
+}
+
+TEST(ListTest, InsertManyFront1) {
+  s21::list<char> list1{'a', 'b'};
+  list1.insert_many_front();
+  EXPECT_EQ(list1.size(), 2);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+}
+
+TEST(ListTest, InsertManyFront2) {
+  s21::list<char> list1{'a', 'b'};
+  list1.insert_many_front('c');
+  EXPECT_EQ(list1.size(), 3);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 'c');
+  EXPECT_EQ(*(++it), 'a');
+  EXPECT_EQ(*(++it), 'b');
+}
+
+TEST(ListTest, InsertManyFront3) {
+  s21::list<char> list1{'a', 'b'};
+  list1.insert_many_front('c', 'd', 'e');
+  EXPECT_EQ(list1.size(), 5);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'e');
+  EXPECT_EQ(*(++it), 'a');
+  EXPECT_EQ(*(++it), 'b');
+}
+
+TEST(ListTest, InsertManyFront4) {
+  s21::list<char> list1{'a', 'b'};
+  list1.insert_many_front('c', 'd', 'e', 'f', 'g');
+  EXPECT_EQ(list1.size(), 7);
+  auto it = list1.begin();
+  EXPECT_EQ(*it, 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'e');
+  EXPECT_EQ(*(++it), 'f');
+  EXPECT_EQ(*(++it), 'g');
+  EXPECT_EQ(*(++it), 'a');
+  EXPECT_EQ(*(++it), 'b');
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

@@ -248,6 +248,24 @@ class list {
 
   void sort() { qsort(begin(), end()); };
 
+  template <typename... Args>
+  iterator insert_many(const_iterator pos, Args&&... args) {
+    (insert(pos, std::forward<Args>(args)), ...);
+    return pos;
+  }
+
+  template <typename... Args>
+  void insert_many_back(Args&&... args) {
+    iterator pos = end();
+    (insert(end(), std::forward<Args>(args)), ...);
+  }
+
+  template <typename... Args>
+  void insert_many_front(Args&&... args) {
+    iterator pos = begin();
+    (insert(pos, std::forward<Args>(args)), ...);
+  }
+
   void print() const {
     std::cout << "{";
     const_iterator p_end = end();
