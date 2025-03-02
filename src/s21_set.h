@@ -71,8 +71,6 @@ class set {
 
     value_type& operator*() const noexcept { return ptr_->data_; };
 
-    // friend class set;
-
    private:
     SetNode* search_greater(SetNode* ptr, const value_type& value) const {
       SetNode* result = nullptr;
@@ -105,6 +103,7 @@ class set {
     SetNode* ptr_;
     SetNode* head_;
   } iterator;
+  typedef const iterator const_iterator;
 
   // constructors
   set() noexcept {
@@ -118,6 +117,8 @@ class set {
       insert(item);
     }
   }
+  // destructor
+  ~set() { clear_tree(root_); }
 
   // Set Iterators
   iterator begin() {
@@ -151,6 +152,12 @@ class set {
   }
 
   // Set Modifiers
+
+  void clear() {
+    clear_tree(root_->left_);
+    root_->left_ = nullptr;
+  }
+
   // std::pair<iterator, bool>
   void insert(const value_type& value) {
     root_->left_ = add_node(root_->left_, value);
@@ -177,6 +184,15 @@ class set {
       ptr->right_ = add_node(ptr->right_, value);
     }
     return result;
+  }
+
+  void clear_tree(SetNode* ptr) {
+    if (ptr != nullptr) {
+      clear_tree(ptr->left_);
+      clear_tree(ptr->right_);
+      delete ptr;
+      --size_;
+    }
   }
 
   void print_node(SetNode* ptr) {

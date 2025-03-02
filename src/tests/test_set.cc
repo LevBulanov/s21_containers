@@ -19,6 +19,9 @@ TEST(SetTest, EmptySet) {
   set1.insert(0);
   EXPECT_EQ(set1.empty(), false);
   EXPECT_EQ(set1.size(), 3);
+  set1.clear();
+  EXPECT_EQ(set1.empty(), true);
+  EXPECT_EQ(set1.size(), 0);
 }
 
 TEST(SetTest, Begin) {
