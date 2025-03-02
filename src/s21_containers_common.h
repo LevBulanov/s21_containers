@@ -5,11 +5,6 @@ namespace s21 {
 
 template <typename value_type>
 class node {
- private:
-  value_type data_ = {0};
-  node<value_type>* next_ = nullptr;
-  node<value_type>* previous_ = nullptr;
-
  public:
   node() {};
   explicit node(value_type data)
@@ -21,6 +16,11 @@ class node {
   void set_data(const value_type data) noexcept { data_ = data; };
   void set_next(node<value_type>* ptr) noexcept { next_ = ptr; };
   void set_previous(node<value_type>* ptr) noexcept { previous_ = ptr; };
+
+ private:
+  value_type data_ = {0};
+  node<value_type>* next_ = nullptr;
+  node<value_type>* previous_ = nullptr;
 };
 
 }  // namespace s21
