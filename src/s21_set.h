@@ -29,28 +29,32 @@ class set {
 
   typedef class SetIterator {
    public:
-    explicit SetIterator(SetNode* p) : ptr_(p) {};
-    SetIterator(SetIterator& it) : ptr_(it.ptr_) {};
-    SetIterator(const SetIterator& it) : ptr_(it.ptr_) {};
+    explicit SetIterator(SetNode* p, SetNode* h) : ptr_(p), head_(h) {};
+    SetIterator(SetIterator& it) : ptr_(it.ptr_), head_(it.head_) {};
+    SetIterator(const SetIterator& it) : ptr_(it.ptr_), head_(it.head_) {};
 
-    SetIterator& operator=(const SetIterator& it) noexcept {
+    SetIterator& operator=(const SetIterator& it) {
       ptr_ = it.ptr_;
+      head_ = it.head_;
       return *this;
     }
 
     bool operator==(SetIterator const& other) const noexcept {
-      return ptr_ == other.ptr_;
+      return ptr_ == other.ptr_ && head_ == other.head_;
     };
 
     bool operator!=(SetIterator const& other) const noexcept {
-      return ptr_ != other.ptr_;
+      return ptr_ != other.ptr_ || head_ != other.head_;
     };
 
-    SetIterator& operator++() noexcept {
-      value_type current_data = *this;
-      bool found = false;
-      SetNode* ptr = search_greater(root_->left_, current_data);
-      if (ptr != nullptr) *this = SetIterator(ptr);
+    SetIterator& operator++() {
+      if (ptr_ == head_) {
+        ptr_ = head_->left_;
+      } else {
+        value_type current_data = *(*this);
+        SetNode* ptr = search_greater(head_->left_, current_data);
+        if (ptr != nullptr) *this = SetIterator(ptr, head_);
+      }
       return *this;
     };
 
@@ -64,11 +68,12 @@ class set {
     friend class set;
 
    private:
-    SetNode* search_greater(const SetNode* ptr,
-                            const value_type& value) const noexcept {
+    SetNode* search_greater(SetNode* ptr, const value_type& value) const {
       SetNode* result = nullptr;
       if (value < ptr->data_) {
-        result = search_greater(ptr->left_, value);
+        if (ptr->left_ != nullptr) {
+          result = search_greater(ptr->left_, value);
+        }
         if (result == nullptr) result = ptr;
       } else if (ptr->right_ != nullptr) {
         result = search_greater(ptr->right_, value);
@@ -76,18 +81,21 @@ class set {
       return result;
     }
     SetNode* ptr_;
+    SetNode* head_;
   } iterator;
 
   // constructors
   set() noexcept {
-    SetNode* new_node = new SetNode({0});
+    SetNode* new_node = new SetNode();
     root_ = new_node;
     size_ = 0;
   }
 
-  // set(std::initializer_list<value_type> const &items) {
-
-  // }
+  set(std::initializer_list<value_type> const& items) : set() {
+    for (const_reference item : items) {
+      insert(item);
+    }
+  }
 
   // Set Iterators
   iterator begin() {
@@ -97,7 +105,7 @@ class set {
         ptr = ptr->left_;
       }
     }
-    return iterator(ptr);
+    return iterator(ptr, root_);
   }
 
   iterator end() {
@@ -108,7 +116,7 @@ class set {
         ptr = ptr->right_;
       }
     }
-    return iterator(ptr);
+    return iterator(ptr, root_);
   }
 
   // Set Capacity
@@ -157,8 +165,8 @@ class set {
     }
   }
 
-  SetNode* root_ = nullptr;
-  size_type size_ = 0;
+  SetNode* root_;
+  size_type size_;
 };
 
 }  // namespace s21
