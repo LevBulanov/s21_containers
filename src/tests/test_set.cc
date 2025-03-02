@@ -162,6 +162,53 @@ TEST(ListTest, MoveConstructor) {
   EXPECT_EQ(*(++it), 'd');
 }
 
+TEST(ListTest, CopyAssigmnent) {
+  s21::set<char> set1{'a', 'b', 'c', 'd'};
+  s21::set<char> set2;
+  set1 = set2;
+  EXPECT_EQ(set1.size(), 0);
+  EXPECT_EQ(set1.empty(), true);
+  EXPECT_EQ(set2.size(), 0);
+  EXPECT_EQ(set2.empty(), true);
+  s21::set<char> set3{'b', 'c', 'a', 'd'};
+  set1 = set3;
+  EXPECT_EQ(set1.size(), 4);
+  EXPECT_EQ(set1.empty(), false);
+  EXPECT_EQ(set3.size(), 4);
+  EXPECT_EQ(set3.empty(), false);
+  auto it = set1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'd');
+  it = set3.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'd');
+}
+
+TEST(ListTest, CopyConstructor) {
+  s21::set<char> set1{'a', 'b', 'c', 'd'};
+  s21::set<char> set2 = set1;
+  EXPECT_EQ(set1.size(), 4);
+  EXPECT_EQ(set1.empty(), false);
+  EXPECT_EQ(set2.size(), 4);
+  EXPECT_EQ(set2.empty(), false);
+  auto it = set2.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+  it = set1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

@@ -118,10 +118,20 @@ class set {
     }
   }
 
+  set(const set& s) : set() { *this = s; }
+
   set(set&& s) noexcept : set() { *this = std::move(s); }
 
   // destructor
   ~set() { clear_tree(root_); }
+
+  // copy assignment operator
+  set& operator=(const set& s) {
+    // std::cout << "copy assignment" << std::endl;
+    clear();
+    root_->left_ = copy_tree(s.root_->left_);
+    return *this;
+  }
 
   // move assignment operator
   set& operator=(set&& s) noexcept {
@@ -213,6 +223,17 @@ class set {
       delete ptr;
       --size_;
     }
+  }
+
+  SetNode* copy_tree(SetNode* ptr) {
+    SetNode* result = nullptr;
+    if (ptr != nullptr) {
+      result = new SetNode(ptr->data_);
+      result->left_ = copy_tree(ptr->left_);
+      result->right_ = copy_tree(ptr->right_);
+      ++size_;
+    }
+    return result;
   }
 
   void print_node(SetNode* ptr) {
