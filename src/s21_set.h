@@ -106,7 +106,7 @@ class set {
   typedef const iterator const_iterator;
 
   // constructors
-  set() noexcept {
+  set() {
     SetNode* new_node = new SetNode();
     root_ = new_node;
     size_ = 0;
@@ -117,8 +117,19 @@ class set {
       insert(item);
     }
   }
+
+  set(set&& s) noexcept : set() { *this = std::move(s); }
+
   // destructor
   ~set() { clear_tree(root_); }
+
+  // move assignment operator
+  set& operator=(set&& s) noexcept {
+    // std::cout << "move assignment" << std::endl;
+    clear();
+    swap(s);
+    return *this;
+  }
 
   // Set Iterators
   iterator begin() {
@@ -165,6 +176,15 @@ class set {
     // bool success = (ptr != nullptr);
     // if (success) ++size_;
     // return success;
+  }
+
+  void swap(set& other) noexcept {
+    SetNode* tmp_root = root_;
+    size_type tmp_size = size_;
+    root_ = other.root_;
+    size_ = other.size_;
+    other.root_ = tmp_root;
+    other.size_ = tmp_size;
   }
 
   void print() {

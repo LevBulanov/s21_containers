@@ -61,24 +61,16 @@ TEST(SetTest, ListConstructor) {
   EXPECT_EQ(set1.size(), 4);
   auto it = set1.begin();
   EXPECT_EQ(*it, 1);
-  ++it;
-  EXPECT_EQ(*it, 2);
-  ++it;
-  EXPECT_EQ(*it, 3);
-  ++it;
-  EXPECT_EQ(*it, 4);
-  ++it;
-  EXPECT_EQ(*it, 4);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  EXPECT_EQ(*(++it), 4);
   it = set1.end();
   EXPECT_EQ(*it, 4);
-  --it;
-  EXPECT_EQ(*it, 3);
-  --it;
-  EXPECT_EQ(*it, 2);
-  --it;
-  EXPECT_EQ(*it, 1);
-  --it;
-  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*(--it), 3);
+  EXPECT_EQ(*(--it), 2);
+  EXPECT_EQ(*(--it), 1);
+  EXPECT_EQ(*(--it), 1);
 }
 
 TEST(SetTest, IteratorEmptySet) {
@@ -87,75 +79,87 @@ TEST(SetTest, IteratorEmptySet) {
   auto it2 = set1.end();
   EXPECT_EQ(it, it2);
   EXPECT_EQ(*it, 0);
-  ++it;
-  EXPECT_EQ(*it, 0);
+  EXPECT_EQ(*(++it), 0);
   it = set1.end();
   EXPECT_EQ(*it, 0);
-  ++it;
-  EXPECT_EQ(*it, 0);
+  EXPECT_EQ(*(++it), 0);
   set1.insert(10);
-  ++it;
-  EXPECT_EQ(*it, 10);
-  --it2;
-  EXPECT_EQ(*it2, 10);
+  EXPECT_EQ(*(++it), 10);
+  EXPECT_EQ(*(--it2), 10);
 }
 
 TEST(SetTest, Iterator1) {
   s21::set<int> set1{4, 3, 2, 1};
   auto it = set1.begin();
   EXPECT_EQ(*it, 1);
-  ++it;
-  EXPECT_EQ(*it, 2);
-  ++it;
-  EXPECT_EQ(*it, 3);
-  ++it;
-  EXPECT_EQ(*it, 4);
-  ++it;
-  EXPECT_EQ(*it, 4);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  EXPECT_EQ(*(++it), 4);
   it = set1.end();
   EXPECT_EQ(*it, 4);
-  --it;
-  EXPECT_EQ(*it, 3);
-  --it;
-  EXPECT_EQ(*it, 2);
-  --it;
-  EXPECT_EQ(*it, 1);
-  --it;
-  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*(--it), 3);
+  EXPECT_EQ(*(--it), 2);
+  EXPECT_EQ(*(--it), 1);
+  EXPECT_EQ(*(--it), 1);
 }
 
 TEST(SetTest, Iterator2) {
   s21::set<std::string> set1{"Nina", "Anna", "Peter", "Alex", "Inna", "Masha"};
   auto it = set1.begin();
   EXPECT_EQ(*it, "Alex");
-  ++it;
-  EXPECT_EQ(*it, "Anna");
-  ++it;
-  EXPECT_EQ(*it, "Inna");
-  ++it;
-  EXPECT_EQ(*it, "Masha");
-  ++it;
-  EXPECT_EQ(*it, "Nina");
-  ++it;
-  EXPECT_EQ(*it, "Peter");
-  ++it;
-  EXPECT_EQ(*it, "Peter");
+  EXPECT_EQ(*(++it), "Anna");
+  EXPECT_EQ(*(++it), "Inna");
+  EXPECT_EQ(*(++it), "Masha");
+  EXPECT_EQ(*(++it), "Nina");
+  EXPECT_EQ(*(++it), "Peter");
+  EXPECT_EQ(*(++it), "Peter");
   it = set1.end();
   EXPECT_EQ(*it, "Peter");
-  --it;
-  EXPECT_EQ(*it, "Nina");
-  --it;
-  EXPECT_EQ(*it, "Masha");
-  --it;
-  EXPECT_EQ(*it, "Inna");
-  --it;
-  EXPECT_EQ(*it, "Anna");
-  --it;
-  EXPECT_EQ(*it, "Alex");
-  --it;
-  EXPECT_EQ(*it, "Alex");
-  --it;
-  EXPECT_EQ(*it, "Alex");
+  EXPECT_EQ(*(--it), "Nina");
+  EXPECT_EQ(*(--it), "Masha");
+  EXPECT_EQ(*(--it), "Inna");
+  EXPECT_EQ(*(--it), "Anna");
+  EXPECT_EQ(*(--it), "Alex");
+  EXPECT_EQ(*(--it), "Alex");
+  EXPECT_EQ(*(--it), "Alex");
+}
+
+TEST(ListTest, MoveAssigmnent) {
+  s21::set<char> set1{'a', 'b', 'c', 'd'};
+  s21::set<char> set2;
+  set1 = std::move(set2);
+  EXPECT_EQ(set1.size(), 0);
+  EXPECT_EQ(set1.empty(), true);
+  EXPECT_EQ(set2.size(), 0);
+  EXPECT_EQ(set2.empty(), true);
+  s21::set<char> set3{'b', 'c', 'a', 'd'};
+  set1 = std::move(set3);
+  EXPECT_EQ(set1.size(), 4);
+  EXPECT_EQ(set1.empty(), false);
+  EXPECT_EQ(set3.size(), 0);
+  EXPECT_EQ(set3.empty(), true);
+  auto it = set1.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'd');
+}
+
+TEST(ListTest, MoveConstructor) {
+  s21::set<char> set1{'a', 'b', 'c', 'd'};
+  s21::set<char> set2 = std::move(set1);
+  EXPECT_EQ(set1.size(), 0);
+  EXPECT_EQ(set1.empty(), true);
+  EXPECT_EQ(set2.size(), 4);
+  EXPECT_EQ(set2.empty(), false);
+  auto it = set2.begin();
+  EXPECT_EQ(*it, 'a');
+  EXPECT_EQ(*(++it), 'b');
+  EXPECT_EQ(*(++it), 'c');
+  EXPECT_EQ(*(++it), 'd');
+  EXPECT_EQ(*(++it), 'd');
 }
 
 int main(int argc, char **argv) {
