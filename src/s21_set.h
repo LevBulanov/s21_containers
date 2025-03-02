@@ -156,7 +156,7 @@ class set {
   }
 
   // Set Iterators
-  iterator begin() {
+  iterator begin() const {
     SetNode* ptr = root_;
     if (!empty()) {
       while (ptr->left_ != nullptr) {
@@ -166,17 +166,7 @@ class set {
     return iterator(ptr, root_);
   }
 
-  iterator end() {
-    // SetNode* ptr = root_;
-    // if (!empty()) {
-    //   ptr = root_->left_;
-    //   while (ptr->right_ != nullptr) {
-    //     ptr = ptr->right_;
-    //   }
-    // }
-    // return iterator(ptr, root_);
-    return iterator(root_, root_);
-  }
+  iterator end() const { return iterator(root_, root_); }
 
   // Set Capacity
   bool empty() const noexcept { return root_->left_ == nullptr; }
@@ -213,11 +203,16 @@ class set {
   }
 
   // Set Lookup
-  iterator find(const Key& key) {
+  iterator find(const Key& key) const noexcept {
     iterator it = begin();
     const_iterator end_it = end();
     while (*it != key && it != end_it) ++it;
     return it;
+  }
+
+  bool contains(const Key& key) const noexcept {
+    iterator it = find(key);
+    return it != end();
   }
 
   void print() {

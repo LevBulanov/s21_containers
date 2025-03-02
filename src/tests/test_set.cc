@@ -206,6 +206,49 @@ TEST(SetTest, CopyConstructor) {
   EXPECT_EQ(*(++it), 'd');
 }
 
+TEST(SetTest, Find1) {
+  s21::set<char> set1{'a', 'b', 'c', 'd'};
+  bool cont = set1.contains('c');
+  EXPECT_EQ(cont, true);
+  auto it = set1.find('c');
+  EXPECT_EQ(set1.size(), 4);
+  EXPECT_EQ(set1.empty(), false);
+  EXPECT_EQ(*it, 'c');
+  cont = set1.contains('A');
+  EXPECT_EQ(cont, false);
+  it = set1.find('A');
+  EXPECT_EQ(it, set1.end());
+  cont = set1.contains('a');
+  EXPECT_EQ(cont, true);
+  it = set1.find('a');
+  EXPECT_EQ(*it, 'a');
+  s21::set<char> set2;
+  cont = set2.contains('a');
+  EXPECT_EQ(cont, false);
+  it = set2.find('a');
+  EXPECT_EQ(it, set2.end());
+}
+
+TEST(SetTest, Find2) {
+  s21::set<std::string> set1{"Nina", "Anna", "Peter", "Alex", "Inna", "Masha"};
+  bool cont = set1.contains("Peter");
+  EXPECT_EQ(cont, true);
+  auto it = set1.find("Peter");
+  EXPECT_EQ(*it, "Peter");
+  cont = set1.contains("Alex");
+  EXPECT_EQ(cont, true);
+  it = set1.find("Alex");
+  EXPECT_EQ(*it, "Alex");
+  cont = set1.contains("Nina");
+  EXPECT_EQ(cont, true);
+  it = set1.find("Nina");
+  EXPECT_EQ(*it, "Nina");
+  cont = set1.contains("Polina");
+  EXPECT_EQ(cont, false);
+  it = set1.find("Polina");
+  EXPECT_EQ(it, set1.end());
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
