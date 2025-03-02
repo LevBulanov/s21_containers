@@ -257,6 +257,80 @@ TEST(SetTest, Find2) {
   EXPECT_EQ(it, set1.end());
 }
 
+TEST(SetTest, Merge1) {
+  s21::set<int> set1{1, 2, 3, 4};
+  s21::set<int> set2;
+  set1.merge(set2);
+  EXPECT_EQ(set1.size(), 4);
+  auto it = set1.begin();
+  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  ++it;
+  EXPECT_EQ(it, set1.end());
+  EXPECT_EQ(set2.size(), 0);
+}
+
+TEST(SetTest, Merge2) {
+  s21::set<int> set1{1, 2, 3, 4};
+  s21::set<int> set2;
+  set2.merge(set1);
+  EXPECT_EQ(set2.size(), 4);
+  EXPECT_EQ(set2.empty(), false);
+  auto it = set2.begin();
+  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  ++it;
+  EXPECT_EQ(it, set2.end());
+  EXPECT_EQ(set1.size(), 0);
+  EXPECT_EQ(set1.empty(), true);
+}
+
+TEST(SetTest, Merge3) {
+  s21::set<int> set1{3, 1, 4, 5};
+  s21::set<int> set2{0, 2, 4, 10, 20, 5};
+  set2.merge(set1);
+  EXPECT_EQ(set2.size(), 8);
+  EXPECT_EQ(set2.empty(), false);
+  auto it = set2.begin();
+  EXPECT_EQ(*it, 0);
+  EXPECT_EQ(*(++it), 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  EXPECT_EQ(*(++it), 5);
+  EXPECT_EQ(*(++it), 10);
+  EXPECT_EQ(*(++it), 20);
+  ++it;
+  EXPECT_EQ(it, set2.end());
+  EXPECT_EQ(set1.size(), 0);
+  EXPECT_EQ(set1.empty(), true);
+}
+
+TEST(SetTest, Merge4) {
+  s21::set<int> set1{3, 1, 4, 5};
+  s21::set<int> set2{0, 2, 4, 10, 20, 5};
+  set1.merge(set2);
+  EXPECT_EQ(set1.size(), 8);
+  EXPECT_EQ(set1.empty(), false);
+  auto it = set1.begin();
+  EXPECT_EQ(*it, 0);
+  EXPECT_EQ(*(++it), 1);
+  EXPECT_EQ(*(++it), 2);
+  EXPECT_EQ(*(++it), 3);
+  EXPECT_EQ(*(++it), 4);
+  EXPECT_EQ(*(++it), 5);
+  EXPECT_EQ(*(++it), 10);
+  EXPECT_EQ(*(++it), 20);
+  ++it;
+  EXPECT_EQ(it, set1.end());
+  EXPECT_EQ(set2.size(), 0);
+  EXPECT_EQ(set2.empty(), true);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

@@ -199,6 +199,12 @@ class set {
     other.size_ = tmp_size;
   }
 
+  void merge(set& other) {
+    splice_tree(other.root_->left_);
+    other.root_->left_ = nullptr;
+    other.size_ = 0;
+  }
+
   // Set Lookup
   iterator find(const Key& key) const noexcept {
     iterator it = begin();
@@ -253,6 +259,15 @@ class set {
       ++size_;
     }
     return result;
+  }
+
+  void splice_tree(SetNode* ptr) {
+    if (ptr != nullptr) {
+      insert(ptr->data_);
+      if (ptr->left_) splice_tree(ptr->left_);
+      if (ptr->right_) splice_tree(ptr->right_);
+      delete ptr;
+    }
   }
 
   void print_node(SetNode* ptr) {
