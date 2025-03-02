@@ -184,13 +184,10 @@ class set {
     root_->left_ = nullptr;
   }
 
-  // std::pair<iterator, bool>
-  void insert(const value_type& value) {
-    root_->left_ = add_node(root_->left_, value);
-
-    // bool success = (ptr != nullptr);
-    // if (success) ++size_;
-    // return success;
+  std::pair<iterator, bool> insert(const value_type& value) {
+    std::pair<iterator, bool> result{end(), false};
+    root_->left_ = add_node(root_->left_, value, result);
+    return result;
   }
 
   void swap(set& other) noexcept {
@@ -221,15 +218,19 @@ class set {
   }
 
  private:
-  SetNode* add_node(SetNode* ptr, const value_type& value) {
+  SetNode* add_node(SetNode* ptr, const value_type& value,
+                    std::pair<iterator, bool>& p) {
     SetNode* result = ptr;
     if (ptr == nullptr) {
       result = new SetNode(value);
       ++size_;
+      // p = {iterator(result), true};
+      p.first = iterator(result, root_);
+      p.second = true;
     } else if (value < ptr->data_) {
-      ptr->left_ = add_node(ptr->left_, value);
+      ptr->left_ = add_node(ptr->left_, value, p);
     } else if (value > ptr->data_) {
-      ptr->right_ = add_node(ptr->right_, value);
+      ptr->right_ = add_node(ptr->right_, value, p);
     }
     return result;
   }
