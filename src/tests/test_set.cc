@@ -66,9 +66,35 @@ TEST(SetTest, ListConstructor) {
   EXPECT_EQ(*it, 4);
   ++it;
   EXPECT_EQ(*it, 4);
-  // it = set1.end();
-  // EXPECT_EQ(*it, 4);
-  // --it;
+  it = set1.end();
+  EXPECT_EQ(*it, 4);
+  --it;
+  EXPECT_EQ(*it, 3);
+  --it;
+  EXPECT_EQ(*it, 2);
+  --it;
+  EXPECT_EQ(*it, 1);
+  --it;
+  EXPECT_EQ(*it, 1);
+}
+
+TEST(SetTest, IteratorEmptySet) {
+  s21::set<int> set1;
+  auto it = set1.begin();
+  auto it2 = set1.end();
+  EXPECT_EQ(it, it2);
+  EXPECT_EQ(*it, 0);
+  ++it;
+  EXPECT_EQ(*it, 0);
+  it = set1.end();
+  EXPECT_EQ(*it, 0);
+  ++it;
+  EXPECT_EQ(*it, 0);
+  set1.insert(10);
+  ++it;
+  EXPECT_EQ(*it, 10);
+  --it2;
+  EXPECT_EQ(*it2, 10);
 }
 
 TEST(SetTest, Iterator1) {
@@ -83,6 +109,16 @@ TEST(SetTest, Iterator1) {
   EXPECT_EQ(*it, 4);
   ++it;
   EXPECT_EQ(*it, 4);
+  it = set1.end();
+  EXPECT_EQ(*it, 4);
+  --it;
+  EXPECT_EQ(*it, 3);
+  --it;
+  EXPECT_EQ(*it, 2);
+  --it;
+  EXPECT_EQ(*it, 1);
+  --it;
+  EXPECT_EQ(*it, 1);
 }
 
 TEST(SetTest, Iterator2) {
@@ -101,6 +137,22 @@ TEST(SetTest, Iterator2) {
   EXPECT_EQ(*it, "Peter");
   ++it;
   EXPECT_EQ(*it, "Peter");
+  it = set1.end();
+  EXPECT_EQ(*it, "Peter");
+  --it;
+  EXPECT_EQ(*it, "Nina");
+  --it;
+  EXPECT_EQ(*it, "Masha");
+  --it;
+  EXPECT_EQ(*it, "Inna");
+  --it;
+  EXPECT_EQ(*it, "Anna");
+  --it;
+  EXPECT_EQ(*it, "Alex");
+  --it;
+  EXPECT_EQ(*it, "Alex");
+  --it;
+  EXPECT_EQ(*it, "Alex");
 }
 
 int main(int argc, char **argv) {

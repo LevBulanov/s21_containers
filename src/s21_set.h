@@ -49,23 +49,29 @@ class set {
 
     SetIterator& operator++() {
       if (ptr_ == head_) {
-        ptr_ = head_->left_;
+        if (head_->left_ != nullptr) ptr_ = head_->left_;
       } else {
-        value_type current_data = *(*this);
+        value_type current_data = ptr_->data_;
         SetNode* ptr = search_greater(head_->left_, current_data);
         if (ptr != nullptr) *this = SetIterator(ptr, head_);
       }
       return *this;
     };
 
-    // SetIterator& operator--() noexcept {
-    //   ptr_ = ptr_->get_previous();
-    //   return *this;
-    // };
+    SetIterator& operator--() {
+      if (ptr_ == head_) {
+        if (head_->left_ != nullptr) ptr_ = head_->left_;
+      } else {
+        value_type current_data = ptr_->data_;
+        SetNode* ptr = search_lower(head_->left_, current_data);
+        if (ptr != nullptr) *this = SetIterator(ptr, head_);
+      };
+      return *this;
+    };
 
     value_type& operator*() const noexcept { return ptr_->data_; };
 
-    friend class set;
+    // friend class set;
 
    private:
     SetNode* search_greater(SetNode* ptr, const value_type& value) const {
@@ -80,6 +86,22 @@ class set {
       }
       return result;
     }
+
+    SetNode* search_lower(SetNode* ptr, const value_type& value) const {
+      SetNode* result = nullptr;
+      if (value <= ptr->data_) {
+        if (ptr->left_ != nullptr) {
+          result = search_lower(ptr->left_, value);
+        }
+      } else {
+        if (ptr->right_ != nullptr) {
+          result = search_lower(ptr->right_, value);
+        }
+        if (result == nullptr) result = ptr;
+      }
+      return result;
+    }
+
     SetNode* ptr_;
     SetNode* head_;
   } iterator;
