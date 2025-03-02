@@ -4,11 +4,11 @@
 
 namespace s21 {
 
-template <typename T>
+template <typename Key>
 class set {
  public:
-  typedef T key_type;
-  typedef T value_type;
+  typedef Key key_type;
+  typedef Key value_type;
   typedef value_type& reference;
   typedef const value_type& const_reference;
   typedef size_t size_type;
@@ -49,18 +49,32 @@ class set {
 
     SetIterator& operator++() {
       if (ptr_ == head_) {
-        if (head_->left_ != nullptr) ptr_ = head_->left_;
+        if (head_->left_ != nullptr) {
+          ptr_ = head_->left_;
+          while (ptr_->right_ != nullptr) {
+            ptr_ = ptr_->right_;
+          }
+        }
       } else {
         value_type current_data = ptr_->data_;
         SetNode* ptr = search_greater(head_->left_, current_data);
-        if (ptr != nullptr) *this = SetIterator(ptr, head_);
+        if (ptr != nullptr) {
+          *this = SetIterator(ptr, head_);
+        } else {
+          *this = SetIterator(head_, head_);
+        }
       }
       return *this;
     };
 
     SetIterator& operator--() {
       if (ptr_ == head_) {
-        if (head_->left_ != nullptr) ptr_ = head_->left_;
+        if (head_->left_ != nullptr) {
+          ptr_ = head_->left_;
+          while (ptr_->right_ != nullptr) {
+            ptr_ = ptr_->right_;
+          }
+        }
       } else {
         value_type current_data = ptr_->data_;
         SetNode* ptr = search_lower(head_->left_, current_data);
@@ -153,14 +167,15 @@ class set {
   }
 
   iterator end() {
-    SetNode* ptr = root_;
-    if (!empty()) {
-      ptr = root_->left_;
-      while (ptr->right_ != nullptr) {
-        ptr = ptr->right_;
-      }
-    }
-    return iterator(ptr, root_);
+    // SetNode* ptr = root_;
+    // if (!empty()) {
+    //   ptr = root_->left_;
+    //   while (ptr->right_ != nullptr) {
+    //     ptr = ptr->right_;
+    //   }
+    // }
+    // return iterator(ptr, root_);
+    return iterator(root_, root_);
   }
 
   // Set Capacity
@@ -195,6 +210,14 @@ class set {
     size_ = other.size_;
     other.root_ = tmp_root;
     other.size_ = tmp_size;
+  }
+
+  // Set Lookup
+  iterator find(const Key& key) {
+    iterator it = begin();
+    const_iterator end_it = end();
+    while (*it != key && it != end_it) ++it;
+    return it;
   }
 
   void print() {
