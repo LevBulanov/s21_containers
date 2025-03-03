@@ -190,6 +190,34 @@ class set {
     return result;
   }
 
+  void erase(iterator pos) {
+    if (pos == end()) {
+      return;
+    }
+    std::pair<SetNode*, char> parent = {root_, 'l'};
+    if (root_->left_->data_ != *pos) parent = find_parent(*pos);
+    SetNode* current =
+        parent.second == 'l' ? parent.first->left_ : parent.first->right_;
+    if (current->right_ == nullptr) {
+      if (parent.second == 'l') {
+        parent.first->left_ = current->left_;
+      } else {
+        parent.first->right_ = current->left_;
+      }
+    } else {
+      if (parent.second == 'l') {
+        parent.first->left_ = current->right_;
+      } else {
+        parent.first->right_ = current->right_;
+      }
+      SetNode* ptr = current->right_;
+      while (ptr->left_ != nullptr) ptr = ptr->left_;
+      ptr->left_ = current->left_;
+    }
+    delete current;
+    --size_;
+  }
+
   void swap(set& other) noexcept {
     SetNode* tmp_root = root_;
     size_type tmp_size = size_;
@@ -213,10 +241,7 @@ class set {
     return it;
   }
 
-  bool contains(const Key& key) const noexcept {
-    iterator it = find(key);
-    return it != end();
-  }
+  bool contains(const Key& key) const noexcept { return find(key) != end(); }
 
   void print() {
     print_node(root_->left_);
@@ -268,6 +293,31 @@ class set {
       if (ptr->right_) splice_tree(ptr->right_);
       delete ptr;
     }
+  }
+  std::pair<SetNode*, char> find_parent(value_type data) const {
+    SetNode* ptr = root_->left_;
+    std::pair<SetNode*, char> result;
+    bool found = false;
+    while (!found) {
+      if (data < ptr->data_) {
+        if (ptr->left_->data_ == data) {
+          found = true;
+          result.first = ptr;
+          result.second = 'l';
+        } else {
+          ptr = ptr->left_;
+        }
+      } else {
+        if (ptr->right_->data_ == data) {
+          found = true;
+          result.first = ptr;
+          result.second = 'r';
+        } else {
+          ptr = ptr->right_;
+        }
+      }
+    }
+    return result;
   }
 
   void print_node(SetNode* ptr) {

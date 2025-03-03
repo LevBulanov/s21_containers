@@ -331,6 +331,54 @@ TEST(SetTest, Merge4) {
   EXPECT_EQ(set2.empty(), true);
 }
 
+TEST(SetTest, Erase1) {
+  s21::set<int> set1{3, 1, 4, 5};
+  set1.erase(++set1.begin());
+  EXPECT_EQ(*(++set1.begin()), 4);
+  set1.erase(set1.begin());
+  EXPECT_EQ(*set1.begin(), 4);
+  set1.erase(--set1.end());
+  EXPECT_EQ(*(--set1.end()), 4);
+  set1.erase(set1.begin());
+  EXPECT_EQ(set1.end(), set1.begin());
+  EXPECT_EQ(set1.size(), 0);
+  EXPECT_EQ(set1.empty(), true);
+}
+
+TEST(SetTest, Erase2) {
+  s21::set<int> set1{10, 4, 5, 1, 3, 8, 7, 9, 20, 30};
+  auto it = set1.begin();
+  ++it;
+  ++it;
+  set1.erase(it);  // 4
+  EXPECT_EQ(*(++set1.begin()), 3);
+  set1.erase(set1.begin());  // 1
+  EXPECT_EQ(*set1.begin(), 3);
+  it = set1.begin();
+  ++it;
+  set1.erase(it);  // 5
+  EXPECT_EQ(*(++set1.begin()), 7);
+  set1.erase(set1.end());  // do nothing
+  it = set1.end();
+  --it;
+  --it;
+  set1.erase(it);  // 20
+  it = set1.end();
+  --it;
+  --it;
+  EXPECT_EQ(*it, 10);
+  it = set1.end();
+  --it;
+  --it;
+  set1.erase(it);  // 10, "top of tree"
+  it = set1.end();
+  --it;
+  --it;
+  EXPECT_EQ(*it, 9);
+  EXPECT_EQ(set1.size(), 5);
+  EXPECT_EQ(set1.empty(), false);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
