@@ -199,6 +199,28 @@ class vector {
     std::swap(capacity_, other.capacity_);
   }
 
+  template <typename... Args>
+  iterator insert_many(const_iterator pos, Args&&... args) {
+    size_type index = (pos.ptr_ - data_);
+
+    while (size_ + sizeof...(args) > capacity_) {
+      reserve(capacity_ * 2);
+    }
+
+    for (size_type i = size_; i > index; --i) {
+        data_[i] = data_[i - 1];
+    }
+
+    for (const_reference value : {args...}) {
+      data_[i] = value;
+      ++i;
+    }
+
+    size_ += sizeof...(args);
+
+    return iterator(data_ + index);
+  }
+
  private:
   size_type size_;
   size_type capacity_;

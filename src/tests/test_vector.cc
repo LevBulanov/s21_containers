@@ -236,3 +236,16 @@ TEST(VectorTest, Swap) {
   EXPECT_EQ(vec2[1], 2);
   EXPECT_EQ(vec2[2], 3);
 }
+
+TEST(VectorTest, InsertMany) {
+  s21::vector<int> vec = {1, 2, 3};
+  auto pos = vec.begin();
+  ++pos;
+  vec.insert_many(pos, 4, 5);
+  EXPECT_EQ(vec.size(), 5);
+  EXPECT_EQ(vec[0], 1);
+  EXPECT_EQ(vec[1], 4);
+  EXPECT_EQ(vec[2], 5);
+  EXPECT_EQ(vec[3], 2);
+  EXPECT_EQ(vec[4], 3);
+}
