@@ -5,8 +5,8 @@ TEST_RUNNER = tests/build/test_runner
 CLANG_FORMAT = clang-format-18 
 СLANG_FORMAT_FILE = ../materials/linters/.clang-format
 
-TEST_SRC = tests/test_vector.cc
-HEADER_SRC = s21_vector.h
+TEST_SRC = tests/*.cc
+HEADER_SRC = *.h
 
 TBD = tests/build
 

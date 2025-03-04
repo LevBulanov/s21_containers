@@ -378,8 +378,3 @@ TEST(SetTest, Erase2) {
   EXPECT_EQ(set1.size(), 5);
   EXPECT_EQ(set1.empty(), false);
 }
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}

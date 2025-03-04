@@ -164,8 +164,3 @@ TEST(StackTest, insertMany4) {
   stack1.pop();
   EXPECT_EQ(stack1.top(), 'a');
 }
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
