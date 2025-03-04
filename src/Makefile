@@ -5,7 +5,8 @@ TEST_RUNNER = tests/build/test_runner
 CLANG_FORMAT = clang-format-18 
 СLANG_FORMAT_FILE = ../materials/linters/.clang-format
 
-TEST_SRC = tests/*.cc
+TEST_SRC = tests/test_vector.cc
+HEADER_SRC = s21_vector.h
 
 TBD = tests/build
 
@@ -26,7 +27,7 @@ clean:
 test: $(TEST_RUNNER)
 	./$(TEST_RUNNER)
 
-tests/build/test_runner: $(TEST_SRC)
+tests/build/test_runner: $(TEST_SRC) $(HEADER_SRC)
 	mkdir -p tests/build
 	$(CC) $(TEST_SRC) $(LINK_TEST_LIBS) $(LINK_LIBS) $(FLAGS) -o $@
 
