@@ -159,7 +159,7 @@ public:
 private:
     size_type size_ = 0;
     size_type capacity_ = 0;
-    value_type *data_;
+    value_type *data_ = nullptr;
 };
 
 }  // namespace s21
