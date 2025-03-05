@@ -436,9 +436,10 @@ TEST(ListTest, MaxSize) {
 TEST(ListTest, InsertMany1) {
   s21::list<char> list1{'a', 'b'};
   auto it = ++list1.begin();
-  list1.insert_many(it);
+  auto it2 = list1.insert_many(it);
   EXPECT_EQ(list1.size(), 2);
   EXPECT_EQ(*it, 'b');
+  EXPECT_EQ(*it2, 'b');
   it = list1.begin();
   EXPECT_EQ(*it, 'a');
   EXPECT_EQ(*(++it), 'b');
@@ -447,9 +448,10 @@ TEST(ListTest, InsertMany1) {
 TEST(ListTest, InsertMany2) {
   s21::list<char> list1{'a', 'b'};
   auto it = ++list1.begin();
-  list1.insert_many(it, 'c');
+  auto it2 = list1.insert_many(it, 'c');
   EXPECT_EQ(list1.size(), 3);
   EXPECT_EQ(*it, 'b');
+  EXPECT_EQ(*it2, 'c');
   it = list1.begin();
   EXPECT_EQ(*it, 'a');
   EXPECT_EQ(*(++it), 'c');
@@ -459,9 +461,10 @@ TEST(ListTest, InsertMany2) {
 TEST(ListTest, InsertMany3) {
   s21::list<char> list1{'a', 'b'};
   auto it = ++list1.begin();
-  list1.insert_many(it, 'c', 'd', 'e');
+  auto it2 = list1.insert_many(it, 'c', 'd', 'e');
   EXPECT_EQ(list1.size(), 5);
   EXPECT_EQ(*it, 'b');
+  EXPECT_EQ(*it2, 'c');
   it = list1.begin();
   EXPECT_EQ(*it, 'a');
   EXPECT_EQ(*(++it), 'c');
@@ -473,9 +476,10 @@ TEST(ListTest, InsertMany3) {
 TEST(ListTest, InsertMany4) {
   s21::list<char> list1{'a', 'b'};
   auto it = ++list1.begin();
-  list1.insert_many(it, 'c', 'd', 'e', 'f', 'g');
+  auto it2 = list1.insert_many(it, 'c', 'd', 'e', 'f', 'g');
   EXPECT_EQ(list1.size(), 7);
   EXPECT_EQ(*it, 'b');
+  EXPECT_EQ(*it2, 'c');
   it = list1.begin();
   EXPECT_EQ(*it, 'a');
   EXPECT_EQ(*(++it), 'c');

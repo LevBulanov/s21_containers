@@ -249,8 +249,11 @@ class list {
 
   template <typename... Args>
   iterator insert_many(const_iterator pos, Args&&... args) {
+    size_type tmp = size_;
     (insert(pos, std::forward<Args>(args)), ...);
-    return pos;
+    iterator result = pos;
+    for (; tmp < size_; ++tmp) --result;
+    return result;
   }
 
   template <typename... Args>
