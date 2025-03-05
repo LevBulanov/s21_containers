@@ -35,6 +35,13 @@ tests/build/test_runner: $(TEST_SRC) $(HEADER_SRC)
 check_valgrind: $(TEST_RUNNER)
 	$(VALGRIND)
 
+.PHONY: gcov_report
+gcov_report: 
+	mkdir -p tests/build
+	$(CC) --coverage -fPIC $(TEST_SRC) $(LINK_TEST_LIBS) $(LINK_LIBS) $(FLAGS) -o $(TEST_RUNNER)
+	./$(TEST_RUNNER)
+	gcovr -e 'tests/*' --html-details gcovr-report.html
+
 .PHONY: clang_format
 clang_format:
 	cp $(СLANG_FORMAT_FILE) ./
