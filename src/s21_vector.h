@@ -138,7 +138,7 @@ class vector {
 
   void shrink_to_fit() {
     if (size_ < capacity_) {
-      value_type *new_data = new value_type[size_];
+      value_type* new_data = new value_type[size_];
       for (size_type i = 0; i < size_; ++i) {
         new_data[i] = data_[i];
       }
@@ -154,7 +154,7 @@ class vector {
     size_type index = (pos.ptr_ - data_);
 
     if (size_ == capacity_) {
-        reserve(capacity_ * 2);
+      reserve(capacity_ * 2);
     }
 
     for (size_type i = size_; i > index; --i) {
