@@ -1,3 +1,6 @@
+#ifndef S21_CONTAINERS_SET_H
+#define S21_CONTAINERS_SET_H
+
 #include <initializer_list>
 #include <iostream>
 #include <limits>
@@ -30,6 +33,7 @@ class set {
 
   typedef class SetIterator {
    public:
+    SetIterator() = default;
     explicit SetIterator(SetNode* p, SetNode* h) : ptr_(p), head_(h) {};
     SetIterator(SetIterator& it) : ptr_(it.ptr_), head_(it.head_) {};
     SetIterator(const SetIterator& it) : ptr_(it.ptr_), head_(it.head_) {};
@@ -341,3 +345,5 @@ class set {
 };
 
 }  // namespace s21
+
+#endif  // S21_CONTAINERS_SET_H
