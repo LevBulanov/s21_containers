@@ -249,3 +249,14 @@ TEST(VectorTest, InsertMany) {
   EXPECT_EQ(vec[3], 2);
   EXPECT_EQ(vec[4], 3);
 }
+
+TEST(VectorTest, InsertManyBack) {
+  s21::vector<int> vec = {1, 2, 3};
+  vec.insert_many_back(4, 5);
+  EXPECT_EQ(vec.size(), 5);
+  EXPECT_EQ(vec[0], 1);
+  EXPECT_EQ(vec[1], 2);
+  EXPECT_EQ(vec[2], 3);
+  EXPECT_EQ(vec[3], 4);
+  EXPECT_EQ(vec[4], 5);
+}
