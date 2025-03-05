@@ -1,3 +1,5 @@
+#ifndef S21_CONTAINERS_LIST_H
+#define S21_CONTAINERS_LIST_H
 #include <initializer_list>
 #include <limits>
 // #include <stdexcept>
@@ -302,3 +304,5 @@ class list {
 };
 
 }  // namespace s21
+
+#endif  // S21_CONTAINERS_LIST_H
