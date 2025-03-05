@@ -260,3 +260,14 @@ TEST(VectorTest, InsertManyBack) {
   EXPECT_EQ(vec[3], 4);
   EXPECT_EQ(vec[4], 5);
 }
+
+TEST(VectorTest, UpdateInplace) {
+  s21::vector<int> vec = {1, 2, 3};
+  auto pos = vec.begin();
+  ++pos;
+  *pos = 4;
+  EXPECT_EQ(vec.size(), 3);
+  EXPECT_EQ(vec[0], 1);
+  EXPECT_EQ(vec[1], 4);
+  EXPECT_EQ(vec[2], 3);
+}
