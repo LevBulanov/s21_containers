@@ -1,6 +1,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <limits>
+#include <vector>
 
 namespace s21 {
 
@@ -187,6 +188,13 @@ class set {
   std::pair<iterator, bool> insert(const value_type& value) {
     std::pair<iterator, bool> result{end(), false};
     root_->left_ = add_node(root_->left_, value, result);
+    return result;
+  }
+
+  template <typename... Args>
+  std::vector<std::pair<iterator, bool>> insert_many(Args&&... args) {
+    std::vector<std::pair<iterator, bool>> result = {};
+    (result.push_back(insert(std::forward<Args>(args))), ...);
     return result;
   }
 
