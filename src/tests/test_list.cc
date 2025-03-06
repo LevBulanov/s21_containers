@@ -15,15 +15,38 @@ TEST(ListTest, FrontBack) {
 
 TEST(ListTest, Iterator) {
   s21::list<char> list1{'a', 'b', 'c', 'd'};
-  auto it = list1.begin();
+  s21::list<char>::iterator it = list1.begin();
   EXPECT_EQ(list1.begin(), it);
   EXPECT_EQ(list1.front(), *it);
   ++it;
   EXPECT_EQ(*it, 'b');
+  *it = 'g';
+  EXPECT_EQ(*it, 'g');
   ++it;
   EXPECT_EQ(*it, 'c');
   ++it;
   EXPECT_EQ(*it, list1.back());
+  --it;
+  EXPECT_EQ(*it, 'c');
+  EXPECT_NE(*it, list1.back());
+}
+
+TEST(ListTest, ConstIterator) {
+  s21::list<char> list1{'a', 'b', 'c', 'd'};
+  s21::list<char>::const_iterator it = list1.begin();
+  EXPECT_EQ(list1.begin(), it);
+  EXPECT_EQ(list1.front(), *it);
+  ++it;
+  EXPECT_EQ(*it, 'b');
+  // *it = 'g';
+  // EXPECT_EQ(*it, 'g');
+  ++it;
+  EXPECT_EQ(*it, 'c');
+  ++it;
+  EXPECT_EQ(*it, list1.back());
+  ++it;
+  EXPECT_EQ(list1.end(), it);
+  --it;
   --it;
   EXPECT_EQ(*it, 'c');
   EXPECT_NE(*it, list1.back());
@@ -580,7 +603,7 @@ TEST(ListTest, InsertManyFront4) {
   EXPECT_EQ(*(++it), 'b');
 }
 
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+// int main(int argc, char **argv) {
+//   ::testing::InitGoogleTest(&argc, argv);
+//   return RUN_ALL_TESTS();
+// }

@@ -11,47 +11,101 @@ namespace s21 {
 template <typename T>
 class list {
  public:
-  typedef T value_type;
-  typedef value_type& reference;
-  typedef const value_type& const_reference;
-  typedef size_t size_type;
-  typedef class ListIterator {
+  using value_type = T;
+  using reference = value_type&;
+  using const_reference = const value_type&;
+  using size_type = size_t;
+  class const_iterator;
+  class iterator {
    public:
-    explicit ListIterator(node<value_type>* p) : ptr_(p) {};
-    ListIterator(ListIterator& it) : ptr_(it.ptr_) {};
-    ListIterator(const ListIterator& it) : ptr_(it.ptr_) {};
+    using value_type = list::value_type;
+    using reference = value_type&;
+    using pointer = value_type*;
+    using iterator_category = std::bidirectional_iterator_tag;
+    using difference_type = std::ptrdiff_t;
 
-    ListIterator& operator=(const ListIterator& it) noexcept {
+    explicit iterator(node<value_type>* p) : ptr_(p) {}
+    iterator(iterator& it) : ptr_(it.ptr_) {};
+    iterator(const iterator& it) : ptr_(it.ptr_) {};
+    iterator(const_iterator& it) : ptr_(it.ptr_) {};
+
+    iterator& operator=(const iterator& it) noexcept {
       ptr_ = it.ptr_;
       return *this;
     }
 
-    bool operator==(ListIterator const& other) const noexcept {
+    bool operator==(const iterator& other) const noexcept {
       return ptr_ == other.ptr_;
-    };
+    }
 
-    bool operator!=(ListIterator const& other) const noexcept {
+    bool operator!=(const iterator& other) const noexcept {
       return ptr_ != other.ptr_;
-    };
+    }
 
-    ListIterator& operator++() noexcept {
+    iterator& operator++() {
       ptr_ = ptr_->get_next();
       return *this;
-    };
+    }
 
-    ListIterator& operator--() noexcept {
+    iterator& operator--() {
       ptr_ = ptr_->get_previous();
       return *this;
-    };
+    }
 
-    value_type& operator*() const noexcept { return ptr_->get_data(); };
+    reference operator*() const { return ptr_->get_data(); }
 
     friend class list;
 
    private:
     node<value_type>* ptr_;
-  } iterator;
-  typedef const iterator const_iterator;
+  };
+
+  class const_iterator {
+   public:
+    using value_type = list::value_type;
+    using const_reference = const value_type&;
+    using pointer = const value_type*;
+    using iterator_category = std::bidirectional_iterator_tag;
+    using difference_type = std::ptrdiff_t;
+
+    explicit const_iterator(node<value_type>* p) : ptr_(p) {}
+    const_iterator(iterator& it) : ptr_(it.ptr_) {};
+    const_iterator(const iterator& it) : ptr_(it.ptr_) {};
+
+    const_iterator& operator=(const const_iterator& it) noexcept {
+      ptr_ = it.ptr_;
+      return *this;
+    }
+
+    // friend для того, чтобы работало сравнение с неявным преобразованием
+    // iterator к const_iterator для обоих аругментов
+    friend bool operator==(const const_iterator& it,
+                           const const_iterator& other) {
+      return it.ptr_ == other.ptr_;
+    }
+
+    friend bool operator!=(const const_iterator& it,
+                           const const_iterator& other) {
+      return it.ptr_ != other.ptr_;
+    }
+
+    const_iterator& operator++() {
+      ptr_ = ptr_->get_next();
+      return *this;
+    }
+
+    const_iterator& operator--() {
+      ptr_ = ptr_->get_previous();
+      return *this;
+    }
+
+    const_reference operator*() const { return ptr_->get_data(); }
+
+    friend class list;
+
+   private:
+    node<value_type>* ptr_;
+  };
 
   // default constructor, creates empty stack
   list() {
@@ -84,7 +138,7 @@ class list {
   // copy assignment operator
   list& operator=(const list& l) {
     this->clear();
-    const_iterator l_end = l.end();
+    const iterator l_end = l.end();
     for (iterator it = l.begin(); it != l_end; ++it) {
       push_back(*it);
     };
@@ -99,11 +153,11 @@ class list {
   }
 
   // List Element access
-  const_reference front() const noexcept { return *(begin()); }
-  const_reference back() const noexcept { return *(--end()); }
+  const_reference front() const { return *(begin()); }
+  const_reference back() const { return *(--end()); }
 
   // List Iterators
-  iterator begin() const noexcept { return iterator(ptr_end_->get_next()); }
+  iterator begin() const { return iterator(ptr_end_->get_next()); }
   iterator end() const noexcept { return iterator(ptr_end_); }
 
   // List Capacity
@@ -140,7 +194,7 @@ class list {
   }
 
   void erase(iterator pos) {
-    const_iterator it_end = end();
+    const iterator it_end = end();
     if (!empty() && pos != it_end) {
       --size_;
       node<value_type>* prev = pos.ptr_->get_previous();
@@ -184,8 +238,8 @@ class list {
     iterator this_it = begin();
     iterator other_it = other.begin();
     iterator move_it = other_it;
-    const_iterator end_this_it = end();
-    const_iterator end_other_it = other.end();
+    const iterator end_this_it = end();
+    const iterator end_other_it = other.end();
     while (this_it != end_this_it && other_it != end_other_it) {
       if (*this_it <= *other_it) {
         ++this_it;
@@ -203,7 +257,7 @@ class list {
   void splice(const_iterator pos, list& other) noexcept {
     iterator other_it = other.begin();
     iterator move_it = other_it;
-    const_iterator end_it = other.end();
+    const iterator end_it = other.end();
     while (other_it != end_it) {
       move_it = other_it;
       ++other_it;
@@ -231,7 +285,7 @@ class list {
     if (!empty()) {
       iterator it = begin();
       iterator del_it = it;
-      const_iterator it_end = end();
+      const iterator it_end = end();
       value_type data = *it;
       ++it;
       while (it != it_end) {
@@ -252,10 +306,10 @@ class list {
   template <typename... Args>
   iterator insert_many(const_iterator pos, Args&&... args) {
     size_type tmp = size_;
-    (insert(pos, std::forward<Args>(args)), ...);
-    iterator result = pos;
-    for (; tmp < size_; ++tmp) --result;
-    return result;
+    iterator insert_pos = iterator(pos.ptr_);
+    (insert(insert_pos, std::forward<Args>(args)), ...);
+    for (; tmp < size_; ++tmp) --insert_pos;
+    return insert_pos;
   }
 
   template <typename... Args>
@@ -271,7 +325,7 @@ class list {
   }
 
  private:
-  void transfer(const_iterator pos, const_iterator src) noexcept {
+  void transfer(const_iterator pos, const iterator src) noexcept {
     src.ptr_->get_previous()->set_next(src.ptr_->get_next());
     src.ptr_->get_next()->set_previous(src.ptr_->get_previous());
 
@@ -282,7 +336,7 @@ class list {
     pos.ptr_->set_previous(src.ptr_);
   }
 
-  void qsort(const_iterator begin, const_iterator end) noexcept {
+  void qsort(const iterator begin, const iterator end) noexcept {
     iterator op = end;
     --op;
     if (op != begin) {
