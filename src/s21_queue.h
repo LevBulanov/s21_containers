@@ -1,7 +1,14 @@
+#ifndef S21_CONTAINERS_QUEUE_H
+#define S21_CONTAINERS_QUEUE_H
+
+
 #include <initializer_list>
 #include <stdexcept>
 #include <cstddef> 
 #include <list>
+
+
+namespace s21 {
 
 template <typename T>
 class queue {
@@ -65,4 +72,8 @@ class queue {
 
     private:
         std::list<value_type> container_;
-};
+}; 
+
+} // namespace s21
+
+#endif
