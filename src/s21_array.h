@@ -82,8 +82,10 @@ class array {
   // Modifiers
   void swap(array &other) {
     array temp(other);
-    other = *this;
-    *this = std::move(temp);
+    for (size_t i = 0; i < N; ++i) {
+      other.data_[i] = data_[i];
+      data_[i] = temp.data_[i];
+    }
   }
 
   void fill(const_reference value) {
