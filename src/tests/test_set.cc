@@ -36,7 +36,7 @@ TEST(SetTest, EmptySet) {
 TEST(SetTest, Begin) {
   s21::set<int> set1;
   auto it = set1.begin();
-  EXPECT_EQ(*it, 0);
+  EXPECT_EQ(it, set1.end());
   set1.insert(1);
   set1.insert(2);
   it = set1.begin();
@@ -50,7 +50,7 @@ TEST(SetTest, Begin) {
 TEST(SetTest, End) {
   s21::set<int> set1;
   auto it = set1.end();
-  EXPECT_EQ(*it, 0);
+  EXPECT_EQ(it, set1.begin());
   set1.insert(5);
   set1.insert(3);
   it = set1.end();
@@ -73,14 +73,13 @@ TEST(SetTest, ListConstructor) {
   EXPECT_EQ(*(++it), 2);
   EXPECT_EQ(*(++it), 3);
   EXPECT_EQ(*(++it), 4);
-  EXPECT_EQ(*(++it), 0);
+  EXPECT_EQ(++it, set1.end());
   it = set1.end();
-  EXPECT_EQ(*it, 0);
   EXPECT_EQ(*(--it), 4);
   EXPECT_EQ(*(--it), 3);
   EXPECT_EQ(*(--it), 2);
   EXPECT_EQ(*(--it), 1);
-  EXPECT_EQ(*(--it), 1);
+  EXPECT_EQ(--it, set1.end());
 }
 
 TEST(SetTest, IteratorEmptySet) {
@@ -88,12 +87,9 @@ TEST(SetTest, IteratorEmptySet) {
   auto it = set1.begin();
   auto it2 = set1.end();
   EXPECT_EQ(it, it2);
-  EXPECT_EQ(*it, 0);
-  EXPECT_EQ(*(++it), 0);
-  EXPECT_EQ(*it2, 0);
-  EXPECT_EQ(*(++it2), 0);
+  EXPECT_EQ(++it, it2);
+  EXPECT_EQ(--it, it2);
   set1.insert(10);
-  EXPECT_EQ(*(++it), 10);
   EXPECT_EQ(*(--it2), 10);
 }
 
@@ -104,13 +100,12 @@ TEST(SetTest, Iterator1) {
   EXPECT_EQ(*(++it), 2);
   EXPECT_EQ(*(++it), 3);
   EXPECT_EQ(*(++it), 4);
-  EXPECT_EQ(*(++it), 0);
-  it = set1.end();
+  EXPECT_EQ(++it, set1.end());
   EXPECT_EQ(*(--it), 4);
   EXPECT_EQ(*(--it), 3);
   EXPECT_EQ(*(--it), 2);
   EXPECT_EQ(*(--it), 1);
-  EXPECT_EQ(*(--it), 1);
+  EXPECT_EQ(--it, set1.end());
 }
 
 TEST(SetTest, Iterator2) {
@@ -123,15 +118,13 @@ TEST(SetTest, Iterator2) {
   EXPECT_EQ(*(++it), "Nina");
   EXPECT_EQ(*(++it), "Peter");
   EXPECT_EQ(++it, set1.end());
-  it = set1.end();
   EXPECT_EQ(*(--it), "Peter");
   EXPECT_EQ(*(--it), "Nina");
   EXPECT_EQ(*(--it), "Masha");
   EXPECT_EQ(*(--it), "Inna");
   EXPECT_EQ(*(--it), "Anna");
   EXPECT_EQ(*(--it), "Alex");
-  EXPECT_EQ(*(--it), "Alex");
-  EXPECT_EQ(*(--it), "Alex");
+  EXPECT_EQ(--it, set1.end());
 }
 
 TEST(SetTest, MoveAssigmnent) {
@@ -217,43 +210,34 @@ TEST(SetTest, CopyConstructor) {
 
 TEST(SetTest, Find1) {
   s21::set<char> set1{'a', 'b', 'c', 'd'};
-  bool cont = set1.contains('c');
-  EXPECT_EQ(cont, true);
+  EXPECT_EQ(set1.contains('c'), true);
   auto it = set1.find('c');
   EXPECT_EQ(set1.size(), 4);
   EXPECT_EQ(set1.empty(), false);
   EXPECT_EQ(*it, 'c');
-  cont = set1.contains('A');
-  EXPECT_EQ(cont, false);
-  it = set1.find('A');
-  EXPECT_EQ(it, set1.end());
-  cont = set1.contains('a');
-  EXPECT_EQ(cont, true);
+  EXPECT_EQ(set1.contains('A'), false);
+  EXPECT_EQ(set1.find('A'), set1.end());
+  EXPECT_EQ(set1.contains('a'), true);
   it = set1.find('a');
   EXPECT_EQ(*it, 'a');
   s21::set<char> set2;
-  cont = set2.contains('a');
-  EXPECT_EQ(cont, false);
+  EXPECT_EQ(set2.contains('a'), false);
   it = set2.find('a');
   EXPECT_EQ(it, set2.end());
 }
 
 TEST(SetTest, Find2) {
   s21::set<std::string> set1{"Nina", "Anna", "Peter", "Alex", "Inna", "Masha"};
-  bool cont = set1.contains("Peter");
-  EXPECT_EQ(cont, true);
+  EXPECT_EQ(set1.contains("Peter"), true);
   auto it = set1.find("Peter");
   EXPECT_EQ(*it, "Peter");
-  cont = set1.contains("Alex");
-  EXPECT_EQ(cont, true);
+  EXPECT_EQ(set1.contains("Alex"), true);
   it = set1.find("Alex");
   EXPECT_EQ(*it, "Alex");
-  cont = set1.contains("Nina");
-  EXPECT_EQ(cont, true);
+  EXPECT_EQ(set1.contains("Nina"), true);
   it = set1.find("Nina");
   EXPECT_EQ(*it, "Nina");
-  cont = set1.contains("Polina");
-  EXPECT_EQ(cont, false);
+  EXPECT_EQ(set1.contains("Polina"), false);
   it = set1.find("Polina");
   EXPECT_EQ(it, set1.end());
 }
