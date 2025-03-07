@@ -28,6 +28,7 @@ class list {
     iterator(iterator& it) : ptr_(it.ptr_) {};
     iterator(const iterator& it) : ptr_(it.ptr_) {};
     iterator(const_iterator& it) : ptr_(it.ptr_) {};
+    iterator(const const_iterator& it) : ptr_(it.ptr_) {};
 
     iterator& operator=(const iterator& it) noexcept {
       ptr_ = it.ptr_;
@@ -75,18 +76,6 @@ class list {
     const_iterator& operator=(const const_iterator& it) noexcept {
       ptr_ = it.ptr_;
       return *this;
-    }
-
-    // friend для того, чтобы работало сравнение с неявным преобразованием
-    // iterator к const_iterator для обоих аругментов
-    friend bool operator==(const const_iterator& it,
-                           const const_iterator& other) {
-      return it.ptr_ == other.ptr_;
-    }
-
-    friend bool operator!=(const const_iterator& it,
-                           const const_iterator& other) {
-      return it.ptr_ != other.ptr_;
     }
 
     const_iterator& operator++() {
