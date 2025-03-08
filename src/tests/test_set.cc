@@ -440,7 +440,7 @@ TEST(SetTest, InsertMany5_3) {
   EXPECT_EQ(v1[4].second, true);
 }
 
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+// int main(int argc, char **argv) {
+//   ::testing::InitGoogleTest(&argc, argv);
+//   return RUN_ALL_TESTS();
+// }
