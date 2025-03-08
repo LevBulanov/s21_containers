@@ -1,12 +1,12 @@
 #ifndef S21_CONTAINERS_AVL_TREE_H
 #define S21_CONTAINERS_AVL_TREE_H
 
-#include "s21_vector.h"
-
 #include <algorithm>
 #include <initializer_list>
 #include <iterator>
 #include <limits>
+
+#include "s21_vector.h"
 
 namespace s21 {
 
