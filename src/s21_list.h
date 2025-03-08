@@ -4,7 +4,6 @@
 #include <initializer_list>
 #include <iterator>
 #include <limits>
-// #include <stdexcept>
 
 #include "s21_containers_common.h"
 

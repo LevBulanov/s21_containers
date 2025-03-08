@@ -1,5 +1,5 @@
+#include "../s21_avl_tree.h"
 #include "gtest/gtest.h"
-#include "s21_avl_tree.h"
 
 using s21::AVLTree;
 
@@ -371,9 +371,4 @@ TEST(AVLTreeConstTest, ConstIteratorTraversal_2) {
   std::vector<int> expected = {1, 1, 1, 1, 1, 1, 1, 1, 1,  1,  1,
                                1, 1, 1, 3, 4, 6, 7, 8, 10, 13, 14};
   EXPECT_EQ(in_order, expected);
-}
-
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

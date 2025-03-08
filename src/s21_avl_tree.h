@@ -5,7 +5,8 @@
 #include <initializer_list>
 #include <iterator>
 #include <limits>
-#include <vector>
+
+#include "s21_vector.h"
 
 namespace s21 {
 
@@ -284,8 +285,8 @@ class AVLTree {
   iterator end() { return iterator(nullptr, this); }
 
   template <typename... Args>
-  std::vector<std::pair<iterator, bool>> insert_many(Args&&... args) {
-    std::vector<std::pair<iterator, bool>> results;
+  s21::vector<std::pair<iterator, bool>> insert_many(Args&&... args) {
+    s21::vector<std::pair<iterator, bool>> results;
     results.reserve(sizeof...(args));
     ((results.push_back(
          std::make_pair(insert(std::forward<Args>(args)), true))),
