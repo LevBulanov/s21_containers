@@ -27,10 +27,10 @@ class list {
     using difference_type = std::ptrdiff_t;
 
     explicit iterator(node<value_type>* p) : ptr_(p) {}
-    iterator(iterator& it) : ptr_(it.ptr_) {};
-    iterator(const iterator& it) : ptr_(it.ptr_) {};
-    iterator(const_iterator& it) : ptr_(it.ptr_) {};
-    iterator(const const_iterator& it) : ptr_(it.ptr_) {};
+    iterator(iterator& it) : ptr_(it.ptr_){};
+    iterator(const iterator& it) : ptr_(it.ptr_){};
+    iterator(const_iterator& it) : ptr_(it.ptr_){};
+    iterator(const const_iterator& it) : ptr_(it.ptr_){};
 
     iterator& operator=(const iterator& it) noexcept {
       ptr_ = it.ptr_;
@@ -72,8 +72,8 @@ class list {
     using difference_type = std::ptrdiff_t;
 
     explicit const_iterator(node<value_type>* p) : ptr_(p) {}
-    const_iterator(iterator& it) : ptr_(it.ptr_) {};
-    const_iterator(const iterator& it) : ptr_(it.ptr_) {};
+    const_iterator(iterator& it) : ptr_(it.ptr_){};
+    const_iterator(const iterator& it) : ptr_(it.ptr_){};
 
     const_iterator& operator++() {
       ptr_ = ptr_->get_next();
