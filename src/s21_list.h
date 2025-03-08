@@ -1,8 +1,9 @@
 #ifndef S21_CONTAINERS_LIST_H
 #define S21_CONTAINERS_LIST_H
+#include <cstddef>
 #include <initializer_list>
+#include <iterator>
 #include <limits>
-// #include <stdexcept>
 
 #include "s21_containers_common.h"
 
