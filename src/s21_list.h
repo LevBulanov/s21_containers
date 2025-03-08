@@ -19,6 +19,9 @@ class list {
   class const_iterator;
   class iterator {
    public:
+    // TODO
+    // нет необходимости дублировать,
+    // во вложенном классе транзитивно доступны все типы из внешнего класса
     using value_type = list::value_type;
     using reference = value_type&;
     using pointer = value_type*;
