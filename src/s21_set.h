@@ -65,8 +65,9 @@ class set : public AVLTree<Key> {
   }
 
   std::pair<iterator, bool> insert(const value_type& value) {
-    std::pair<iterator, bool> result = {this->end(), false};
-    if (!this->contains(value)) {
+    iterator it = this->find(value);
+    std::pair<iterator, bool> result = {it, false};
+    if (it == this->end()) {
       Node* insertedNode = nullptr;
       this->root_ =
           AVLTree<Key>::insert(this->root_, value, nullptr, &insertedNode);
