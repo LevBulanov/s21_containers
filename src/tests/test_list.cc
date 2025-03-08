@@ -602,8 +602,3 @@ TEST(ListTest, InsertManyFront4) {
   EXPECT_EQ(*(++it), 'a');
   EXPECT_EQ(*(++it), 'b');
 }
-
-// int main(int argc, char **argv) {
-//   ::testing::InitGoogleTest(&argc, argv);
-//   return RUN_ALL_TESTS();
-// }
