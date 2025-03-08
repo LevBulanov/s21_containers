@@ -1,11 +1,10 @@
 #ifndef S21_CONTAINERS_QUEUE_H
 #define S21_CONTAINERS_QUEUE_H
 
+#include "s21_list.h"
 
 #include <initializer_list>
-#include <stdexcept>
 #include <cstddef> 
-#include <list>
 
 
 namespace s21 {
@@ -22,7 +21,7 @@ class queue {
         //constructors, think about exceptions 
         queue() = default;
         queue(std::initializer_list<value_type> const &items) : container_(items) {}
-        queue(const queue &q) : container_(q) {}
+        queue(const queue &q) : container_(q.container_) {}
         queue(queue &&q) noexcept : container_(std::move(q.container_)) {}
 
         //destructor
@@ -64,14 +63,14 @@ class queue {
             container_.swap(other.container_);
         }
 
-        template <typename... Args> //change to instert many back
-        void emplace(Args&&... args) {
-            container_.emplace_back(std::forward<Args>(args)...); //change to insert_many_back
+        template <typename... Args>
+        void insert_many_back(Args&&... args) {
+            container_.insert_many_back(std::forward<Args>(args)...); 
         }
 
 
     private:
-        std::list<value_type> container_;
+        s21::list<value_type> container_;
 }; 
 
 } // namespace s21
