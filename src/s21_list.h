@@ -1,6 +1,8 @@
 #ifndef S21_CONTAINERS_LIST_H
 #define S21_CONTAINERS_LIST_H
+#include <cstddef>
 #include <initializer_list>
+#include <iterator>
 #include <limits>
 // #include <stdexcept>
 
@@ -73,11 +75,6 @@ class list {
     const_iterator(iterator& it) : ptr_(it.ptr_) {};
     const_iterator(const iterator& it) : ptr_(it.ptr_) {};
 
-    const_iterator& operator=(const const_iterator& it) noexcept {
-      ptr_ = it.ptr_;
-      return *this;
-    }
-
     const_iterator& operator++() {
       ptr_ = ptr_->get_next();
       return *this;
@@ -107,7 +104,7 @@ class list {
   }
   // parameterized constructor, creates the list of size n
   explicit list(size_type n) : list() {
-    for (int i = 0; i < n; ++i) this->push_front({0});
+    for (size_type i = 0; i < n; ++i) this->push_front({0});
   }
   // initializer list constructor
   list(std::initializer_list<value_type> const& items) : list() {
@@ -305,12 +302,14 @@ class list {
   void insert_many_back(Args&&... args) {
     iterator pos = end();
     (insert(pos, std::forward<Args>(args)), ...);
+    --pos;
   }
 
   template <typename... Args>
   void insert_many_front(Args&&... args) {
     iterator pos = begin();
     (insert(pos, std::forward<Args>(args)), ...);
+    ++pos;
   }
 
  private:
