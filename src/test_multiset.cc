@@ -223,6 +223,12 @@ TEST(multisetTest, InsertMany) {
   EXPECT_EQ(traversal, expected);
 }
 
+TEST(multisetTest, InsertMany_zero_arg) {
+    multiset<int> tree;
+    auto results = tree.insert_many();
+    EXPECT_EQ(results.size(), 0);
+}
+
 // Тест итераторов (прямой и обратный обход)
 TEST(multisetTest, IteratorTraversal) {
   multiset<int> tree = {15, 10, 20, 8, 12, 16, 25};
