@@ -295,7 +295,7 @@ class AVLTree {
 
   ~AVLTree() { destroy(root_); }
 
- private:
+ protected:
   Node* root_;
   friend class iterator;
 
