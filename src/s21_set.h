@@ -2,9 +2,7 @@
 #define S21_CONTAINERS_SET_H
 
 #include <initializer_list>
-#include <iostream>
 #include <limits>
-#include <vector>
 
 #include "s21_avl_tree.h"
 
@@ -57,8 +55,8 @@ class set : public AVLTree<Key> {
   }
 
   template <typename... Args>
-  std::vector<std::pair<iterator, bool>> insert_many(Args&&... args) {
-    std::vector<std::pair<iterator, bool>> results;
+  s21::vector<std::pair<iterator, bool>> insert_many(Args&&... args) {
+    s21::vector<std::pair<iterator, bool>> results;
     results.reserve(sizeof...(args));
     ((results.push_back(this->insert(std::forward<Args>(args)))), ...);
     return results;

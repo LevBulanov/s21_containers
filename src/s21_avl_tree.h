@@ -1,9 +1,7 @@
 #ifndef S21_CONTAINERS_AVL_TREE_H
 #define S21_CONTAINERS_AVL_TREE_H
 
-#include <algorithm>
 #include <initializer_list>
-#include <iterator>
 #include <limits>
 
 #include "s21_vector.h"
@@ -218,7 +216,7 @@ class AVLTree {
     return iterator(insertedNode, this);
   }
 
-  void remove(const Key& key) {  // удаление первого элемента с заданным ключем
+  void remove(const Key& key) {  // удаление первого элемента с заданным ключом
     root_ = remove(root_, key, nullptr);
   }
 
@@ -512,7 +510,6 @@ class AVLTree {
     }
     if (key == node->key) {
       return iterator(node, this);
-      ;
     }
     if (key < node->key) {
       return search(node->left, key);
@@ -549,4 +546,4 @@ class AVLTree {
 
 }  // namespace s21
 
-#endif
+#endif  // S21_CONTAINERS_AVL_TREE_H

@@ -2,7 +2,6 @@
 #define S21_CONTAINERS_LIST_H
 #include <cstddef>
 #include <initializer_list>
-#include <iterator>
 #include <limits>
 
 #include "s21_containers_common.h"
@@ -16,18 +15,13 @@ class list {
   using reference = value_type&;
   using const_reference = const value_type&;
   using size_type = size_t;
+  using pointer = const value_type*;
+  using iterator_category = std::bidirectional_iterator_tag;
+  using difference_type = std::ptrdiff_t;
+
   class const_iterator;
   class iterator {
    public:
-    // TODO
-    // нет необходимости дублировать,
-    // во вложенном классе транзитивно доступны все типы из внешнего класса
-    using value_type = list::value_type;
-    using reference = value_type&;
-    using pointer = value_type*;
-    using iterator_category = std::bidirectional_iterator_tag;
-    using difference_type = std::ptrdiff_t;
-
     explicit iterator(node<value_type>* p) : ptr_(p) {}
     iterator(iterator& it) : ptr_(it.ptr_) {};
     iterator(const iterator& it) : ptr_(it.ptr_) {};
@@ -67,12 +61,6 @@ class list {
 
   class const_iterator {
    public:
-    using value_type = list::value_type;
-    using const_reference = const value_type&;
-    using pointer = const value_type*;
-    using iterator_category = std::bidirectional_iterator_tag;
-    using difference_type = std::ptrdiff_t;
-
     explicit const_iterator(node<value_type>* p) : ptr_(p) {}
     const_iterator(iterator& it) : ptr_(it.ptr_) {};
     const_iterator(const iterator& it) : ptr_(it.ptr_) {};

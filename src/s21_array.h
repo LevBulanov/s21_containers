@@ -1,3 +1,6 @@
+#ifndef S21_ARRAY_H
+#define S21_ARRAY_H
+
 #include <cstddef>
 #include <initializer_list>
 #include <stdexcept>
@@ -99,3 +102,5 @@ class array {
 };
 
 }  // namespace s21
+
+#endif  // S21_ARRAY_H

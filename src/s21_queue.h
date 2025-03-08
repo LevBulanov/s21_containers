@@ -58,4 +58,4 @@ class queue {
 
 }  // namespace s21
 
-#endif
+#endif  // S21_CONTAINERS_QUEUE_H
