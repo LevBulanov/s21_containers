@@ -6,9 +6,9 @@ namespace s21 {
 template <typename value_type>
 class node {
  public:
-  node(){};
+  node() {};
   explicit node(value_type data)
-      : data_(data), next_(nullptr), previous_(nullptr){};
+      : data_(data), next_(nullptr), previous_(nullptr) {};
   value_type& get_data() const noexcept { return data_; };
   value_type& get_data() noexcept { return data_; };
   node<value_type>* get_next() const noexcept { return next_; };
