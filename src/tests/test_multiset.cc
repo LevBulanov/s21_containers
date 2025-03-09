@@ -365,6 +365,21 @@ TEST(multisetConstTest, ConstIteratorTraversal) {
   EXPECT_EQ(in_order, expected);
 }
 
+TEST(multisetConstTest, DecrementOperator) {
+  s21::multiset<int> tree{5, 3, 7, 2, 4, 6, 8};
+
+  std::vector<int> expected = {8, 7, 6, 5, 4, 3, 2};
+  std::vector<int> actual;
+
+  s21::multiset<int>::const_iterator it = tree.end();
+
+  while (it != tree.begin()) {
+    --it;
+    actual.push_back(*it);
+  }
+  EXPECT_EQ(actual, expected);
+}
+
 TEST(multisetConstTest, ConstIteratorTraversal_2) {
   multiset<int> tree = {8, 3, 10, 1, 1, 1, 1, 1,  1, 1, 1,
                         1, 1, 1,  1, 1, 1, 6, 14, 4, 7, 13};
