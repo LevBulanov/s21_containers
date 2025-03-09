@@ -16,7 +16,8 @@ TEST(SetTest, EmptySet) {
   pair = set1.insert(1);
   EXPECT_EQ(set1.empty(), false);
   EXPECT_EQ(set1.size(), 1);
-  EXPECT_EQ(pair.first, set1.end());
+  // EXPECT_EQ(pair.first, set1.end());
+  EXPECT_EQ(*(pair.first), 1);
   EXPECT_EQ(pair.second, false);
   pair = set1.insert(2);
   EXPECT_EQ(set1.empty(), false);
@@ -398,7 +399,7 @@ TEST(SetTest, InsertMany2_1) {
   EXPECT_EQ(v1.size(), 2);
   EXPECT_EQ(*(v1[0].first), 'c');
   EXPECT_EQ(v1[0].second, true);
-  EXPECT_EQ(v1[1].first, set1.end());
+  EXPECT_EQ(*(v1[1].first), 'a');
   EXPECT_EQ(v1[1].second, false);
 }
 
@@ -410,11 +411,11 @@ TEST(SetTest, InsertMany3_1) {
   EXPECT_EQ(*it, 'a');
   EXPECT_EQ(*(++it), 'b');
   EXPECT_EQ(*(++it), 'c');
-  EXPECT_EQ(v1[0].first, set1.end());
+  EXPECT_EQ(*(v1[0].first), 'b');
   EXPECT_EQ(v1[0].second, false);
   EXPECT_EQ(*(v1[1].first), 'c');
   EXPECT_EQ(v1[1].second, true);
-  EXPECT_EQ(v1[2].first, set1.end());
+  EXPECT_EQ(*(v1[2].first), 'a');
   EXPECT_EQ(v1[2].second, false);
 }
 
@@ -432,9 +433,9 @@ TEST(SetTest, InsertMany5_3) {
   EXPECT_EQ(v1[0].second, true);
   EXPECT_EQ(*(v1[1].first), 'c');
   EXPECT_EQ(v1[1].second, true);
-  EXPECT_EQ(v1[2].first, set1.end());
+  EXPECT_EQ(*(v1[2].first), 'a');
   EXPECT_EQ(v1[2].second, false);
-  EXPECT_EQ(v1[3].first, set1.end());
+  EXPECT_EQ(*(v1[3].first), 'a');
   EXPECT_EQ(v1[3].second, false);
   EXPECT_EQ(*(v1[4].first), 'e');
   EXPECT_EQ(v1[4].second, true);
