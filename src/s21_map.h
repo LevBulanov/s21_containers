@@ -5,102 +5,82 @@
 #include <initializer_list>
 #include <stdexcept>
 
-#include "s21_vector.h"
+#include "s21_avl_tree.h"
 
 namespace s21 {
 template <typename Key, typename T>
-class map {
-  class MapIterator;
-  class MapConstIterator;
-
+class map : public avl_tree<Key, T> {
   using key_type = Key;
   using mapped_type = T;
   using value_type = std::pair<const key_type, mapped_type>;
   using reference = value_type&;
   using const_reference = const value_type&;
-  using iterator = MapIterator;
-  using const_iterator = MapConstIterator;
+  using iterator = typename s21::avl_tree<key_type, mapped_type>::iterator;
+  using const_iterator =
+      typename s21::avl_tree<key_type, mapped_type>::const_iterator;
   using size_type = std::size_t;
+  using tree = typename s21::avl_tree<key_type, mapped_type>;
 
  public:
   map() = default;
 
-  map(std::initializer_list<value_type> const& items) {
-    for (auto it = items.begin(); it != items.end(); ++it) {
-      insert(*it);
-    }
-  };
+  map(std::initializer_list<value_type> const& items) : tree(items) {};
 
-  map(const map& other) {
-    for (const auto& item : other) {
-      insert(item);
-    }
-  }
+  map(const map& other) : tree(other) {}
 
-  map(map&& other) noexcept {
-    for (auto& item : other) {
-      insert(std::move(item));
-    }
-  }
+  map(map&& other) noexcept : tree(other) {}
 
   ~map() = default;
 
-  map& operator=(map&& other) {}
+  map& operator=(map&& other) {
+    tree::operator=(std::move(other));
+    return *this;
+  }
 
   T& at(const key_type& key) {
-    auto it = find(key);
-    if (it == end()) {
+    auto it = this->find(key);
+    if (it == this->end()) {
       throw std::out_of_range("Key not found");
     }
     return it->second;
   }
 
   T& operator[](const key_type& key) {
-    auto it = find(key);
-    if (it == end()) {
-      insert({key, T()});
-      it = find(key);
+    auto it = this->find(key);
+    if (it == this->end()) {
+      this->insert({key, T()});
+      it = this->find(key);
     }
     return it->second;
   }
 
-  iterator begin() { return iterator(); }
-  iterator end() { return iterator(); }
-
-  bool empty() const { return true; }
-  size_type size() const { return 0; }
-  size_type max_size() const { return 0; }
-
-  void clear() {}
   std::pair<iterator, bool> insert(const value_type& value) {
-    return {iterator(), false};
+    iterator it = iterator(this->find(value.first));
+    std::pair<iterator, bool> result = {it, false};
+    if (it == this->end()) {
+      it = tree::insert(value);
+      result = {it, true};
+    }
+    return result;
   }
 
-  std::pair<iterator, bool> insert(const Key& key, const T& value) {
-    return {iterator(), false};
+  std::pair<iterator, bool> insert(const Key& key, const T& obj) {
+    return insert({key, obj});
   }
 
   std::pair<iterator, bool> insert_or_assign(const key_type& key,
                                              const mapped_type& obj) {
-    auto it = find(key);
-    if (it != end()) {
-      it->second = obj;
-      return {it, false};
-    } else {
-      return insert({key, obj});
+    auto try_insert = insert({key, obj});
+    if (!try_insert.second) {
+      this->operator[](key) = obj;
     }
+    return try_insert;
   }
 
   template <typename... Args>
   s21::vector<std::pair<iterator, bool>> insert_many(Args&&... args) {
     return s21::vector<std::pair<iterator, bool>>();
   }
-
-  void erase(iterator pos) {}
-  void swap(map& other) {}
-  void merge(map& other) {}
-
-  bool contains(const key_type& key) const { return false; }
 };
 }  // namespace s21
 
