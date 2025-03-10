@@ -449,6 +449,7 @@ class avl_tree {
       } else {
         Node* temp = minValueNode(root->right);
         root->data.second = temp->data.second;
+        // TODO explore alternatives
         const_cast<key_type&>(root->data.first) = temp->data.first;
         root->right = eraseNode(root->right, temp, root);
       }
@@ -488,6 +489,7 @@ class avl_tree {
       } else {
         Node* temp = minValueNode(node->right);
         node->data.second = temp->data.second;
+        // TODO explore alternatives
         const_cast<key_type&>(node->data.first) = temp->data.first;
         node->right = remove(node->right, temp->key(), node);
       }
