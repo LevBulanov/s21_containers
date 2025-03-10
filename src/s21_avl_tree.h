@@ -9,7 +9,7 @@
 namespace s21 {
 
 template <typename Key, typename T>
-class AVLTree {
+class avl_tree {
  public:
   using key_type = Key;
   using mapped_type = T;
@@ -38,16 +38,18 @@ class AVLTree {
 
   class iterator {
    public:
-    using pointer = Key*;
+    // TODO remove?
+    // using pointer = Key*;
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type = std::ptrdiff_t;
 
     iterator() : node_(nullptr), tree_(nullptr) {}
-    iterator(Node* node, const AVLTree<key_type, mapped_type>* tree)
+    iterator(Node* node, const avl_tree<key_type, mapped_type>* tree)
         : node_(node), tree_(tree) {}
 
     reference operator*() { return node_->data; }
-    pointer operator->() { return &(node_->data); }
+    // TODO remove?
+    // pointer operator->() { return &(node_->data); }
 
     iterator& operator++() {
       if (node_ == nullptr) return *this;
@@ -86,10 +88,10 @@ class AVLTree {
 
     bool operator!=(const iterator& other) const { return !(*this == other); }
 
-   private:
+   protected:
     Node* node_;
-    const AVLTree<key_type, mapped_type>* tree_;
-    friend class AVLTree<key_type, mapped_type>;
+    const avl_tree<key_type, mapped_type>* tree_;
+    friend class avl_tree<key_type, mapped_type>;
 
     Node* minimum(Node* node) const {
       while (node and node->left != nullptr) node = node->left;
@@ -109,7 +111,7 @@ class AVLTree {
     using difference_type = std::ptrdiff_t;
 
     const_iterator() : node_(nullptr), tree_(nullptr) {}
-    const_iterator(Node* node, const AVLTree<key_type, mapped_type>* tree)
+    const_iterator(Node* node, const avl_tree<key_type, mapped_type>* tree)
         : node_(node), tree_(tree) {}
     const_iterator(const iterator& it) : node_(it.node_), tree_(it.tree_) {}
 
@@ -157,8 +159,8 @@ class AVLTree {
 
    private:
     Node* node_;
-    const AVLTree<key_type, mapped_type>* tree_;
-    friend class AVLTree<key_type, mapped_type>;
+    const avl_tree<key_type, mapped_type>* tree_;
+    friend class avl_tree<key_type, mapped_type>;
 
     Node* minimum(Node* node) const {
       while (node and node->left != nullptr) node = node->left;
@@ -172,21 +174,21 @@ class AVLTree {
   };
 
   // конструкторы
-  AVLTree() : root_(nullptr) {}
+  avl_tree() : root_(nullptr) {}
 
-  AVLTree(std::initializer_list<value_type> const& items) : root_(nullptr) {
+  avl_tree(std::initializer_list<value_type> const& items) : root_(nullptr) {
     for (auto it = items.begin(); it != items.end(); ++it) {
       insert(*it);
     }
   }
 
-  AVLTree(const AVLTree& other) : root_(copyTree(other.root_, nullptr)) {}
+  avl_tree(const avl_tree& other) : root_(copyTree(other.root_, nullptr)) {}
 
-  AVLTree(AVLTree&& other) noexcept : root_(other.root_) {
+  avl_tree(avl_tree&& other) noexcept : root_(other.root_) {
     other.root_ = nullptr;
   }
 
-  AVLTree& operator=(AVLTree&& other) noexcept {
+  avl_tree& operator=(avl_tree&& other) noexcept {
     if (this != &other) {
       this->clear();
       root_ = other.root_;
@@ -229,14 +231,14 @@ class AVLTree {
     root_ = eraseNode(root_, pos.node_, nullptr);
   }
 
-  void swap(AVLTree& other) {
+  void swap(avl_tree& other) {
     if (this == &other) return;
     Node* temp = this->root_;
     this->root_ = other.root_;
     other.root_ = temp;
   }
 
-  void merge(AVLTree& other) {
+  void merge(avl_tree& other) {
     if (this == &other) return;
     mergeNodes(other.root_);
     other.root_ = nullptr;
@@ -296,7 +298,7 @@ class AVLTree {
     return results;
   }
 
-  ~AVLTree() { destroy(root_); }
+  ~avl_tree() { destroy(root_); }
 
  protected:
   Node* root_;

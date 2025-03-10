@@ -16,7 +16,6 @@ TEST(SetTest, EmptySet) {
   pair = set1.insert(1);
   EXPECT_EQ(set1.empty(), false);
   EXPECT_EQ(set1.size(), 1);
-  // EXPECT_EQ(pair.first, set1.end());
   EXPECT_EQ(*(pair.first), 1);
   EXPECT_EQ(pair.second, false);
   pair = set1.insert(2);
@@ -440,8 +439,3 @@ TEST(SetTest, InsertMany5_3) {
   EXPECT_EQ(*(v1[4].first), 'e');
   EXPECT_EQ(v1[4].second, true);
 }
-
-// int main(int argc, char **argv) {
-//   ::testing::InitGoogleTest(&argc, argv);
-//   return RUN_ALL_TESTS();
-// }

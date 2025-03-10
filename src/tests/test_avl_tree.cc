@@ -1,11 +1,11 @@
 #include "../s21_avl_tree.h"
 #include "gtest/gtest.h"
 
-using s21::AVLTree;
+using s21::avl_tree;
 
 // Тест на конструктор по умолчанию
 TEST(AVLTreeTest, DefaultConstructor) {
-  AVLTree<std::string, int> tree;
+  avl_tree<std::string, int> tree;
   EXPECT_TRUE(tree.empty());
   EXPECT_EQ(tree.size(), 0u);
   EXPECT_EQ(tree.begin(), tree.end());
@@ -13,7 +13,7 @@ TEST(AVLTreeTest, DefaultConstructor) {
 
 // Тест на конструктор с initializer_list и итерацию (in-order traversal)
 TEST(AVLTreeTest, InitializerListConstructor) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {3, "three"}, {1, "one"}, {4, "four"}, {2, "two"}, {5, "five"}};
 
   EXPECT_FALSE(tree.empty());
@@ -32,9 +32,9 @@ TEST(AVLTreeTest, InitializerListConstructor) {
 
 // Тест на копирующий конструктор
 TEST(AVLTreeTest, CopyConstructor) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {3, "three"}, {1, "one"}, {4, "four"}, {2, "two"}, {5, "five"}};
-  AVLTree<int, std::string> copy(tree);
+  avl_tree<int, std::string> copy(tree);
   EXPECT_EQ(copy.size(), tree.size());
 
   // Проверяем, что in-order обход копии совпадает с оригиналом
@@ -47,9 +47,9 @@ TEST(AVLTreeTest, CopyConstructor) {
 
 // Тест на конструктор перемещения
 TEST(AVLTreeTest, MoveConstructor) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {3, "three"}, {1, "one"}, {4, "four"}, {2, "two"}, {5, "five"}};
-  AVLTree<int, std::string> moved(std::move(tree));
+  avl_tree<int, std::string> moved(std::move(tree));
   EXPECT_EQ(moved.size(), 5u);
   // После перемещения исходное дерево должно оказаться пустым
   EXPECT_TRUE(tree.empty());
@@ -65,10 +65,10 @@ TEST(AVLTreeTest, MoveConstructor) {
 
 // Тест на оператор перемещающего присваивания
 TEST(AVLTreeTest, MoveAssignment) {
-  AVLTree<int, std::string> tree1 = {
+  avl_tree<int, std::string> tree1 = {
       {10, "ten"}, {20, "twenty"}, {30, "thirty"}};
 
-  AVLTree<int, std::string> tree2 = {{40, "forty"}, {50, "fifty"}};
+  avl_tree<int, std::string> tree2 = {{40, "forty"}, {50, "fifty"}};
 
   tree1 = std::move(tree2);
   EXPECT_EQ(tree1.size(), 2u);
@@ -79,7 +79,7 @@ TEST(AVLTreeTest, MoveAssignment) {
 
 // Тест на метод insert и работу с дубликатами
 TEST(AVLTreeTest, Insert) {
-  AVLTree<int, std::string> tree;
+  avl_tree<int, std::string> tree;
   tree.insert(std::pair<int, std::string>(10, "ten"));
   tree.insert(std::pair<int, std::string>(5, "five"));
   tree.insert(std::pair<int, std::string>(15, "fifteen"));
@@ -96,11 +96,11 @@ TEST(AVLTreeTest, Insert) {
 
 // Тест на удаление по ключу (remove)
 TEST(AVLTreeTest, Remove) {
-  AVLTree<int, std::string> tree = {{20, "twenty"},
-                                    {10, "ten"},
-                                    {30, "thirty"},
-                                    {25, "twenty five"},
-                                    {35, "thirty five"}};
+  avl_tree<int, std::string> tree = {{20, "twenty"},
+                                     {10, "ten"},
+                                     {30, "thirty"},
+                                     {25, "twenty five"},
+                                     {35, "thirty five"}};
 
   EXPECT_EQ(tree.size(), 5u);
   EXPECT_TRUE(tree.contains(30));
@@ -115,7 +115,7 @@ TEST(AVLTreeTest, Remove) {
 
 // Тест на удаление по итератору (erase)
 TEST(AVLTreeTest, Erase) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {10, "ten"}, {20, "twenty"}, {30, "thirty"}, {40, "forty"}};
   auto it = tree.find(20);
   ASSERT_NE(it, tree.end());
@@ -126,8 +126,8 @@ TEST(AVLTreeTest, Erase) {
 
 // Тест на swap
 TEST(AVLTreeTest, Swap) {
-  AVLTree<int, std::string> tree1 = {{1, "one"}, {2, "two"}, {3, "three"}};
-  AVLTree<int, std::string> tree2 = {{4, "four"}, {5, "five"}, {6, "six"}};
+  avl_tree<int, std::string> tree1 = {{1, "one"}, {2, "two"}, {3, "three"}};
+  avl_tree<int, std::string> tree2 = {{4, "four"}, {5, "five"}, {6, "six"}};
   tree1.swap(tree2);
   EXPECT_TRUE(tree1.contains(4));
   EXPECT_TRUE(tree1.contains(5));
@@ -139,9 +139,9 @@ TEST(AVLTreeTest, Swap) {
 
 // Тест на merge
 TEST(AVLTreeTest, Merge) {
-  AVLTree<int, std::string> tree1 = {{1, "one"}, {3, "three"}, {5, "five"}};
+  avl_tree<int, std::string> tree1 = {{1, "one"}, {3, "three"}, {5, "five"}};
   // двойное вхождение "3"
-  AVLTree<int, std::string> tree2 = {{2, "two"}, {3, "three"}, {4, "four"}};
+  avl_tree<int, std::string> tree2 = {{2, "two"}, {3, "three"}, {4, "four"}};
   tree1.merge(tree2);
   // После слияния второе дерево должно оказаться пустым
   EXPECT_TRUE(tree2.empty());
@@ -162,7 +162,7 @@ TEST(AVLTreeTest, Merge) {
 
 // Тест на методы count и contains
 TEST(AVLTreeTest, CountContains) {
-  AVLTree<int, std::string> tree;
+  avl_tree<int, std::string> tree;
   tree.insert(std::pair(50, "fifty"));
   tree.insert(std::pair(50, "fifty"));
   tree.insert(std::pair(30, "thirty"));
@@ -174,7 +174,7 @@ TEST(AVLTreeTest, CountContains) {
 
 // Тест на метод find
 TEST(AVLTreeTest, Find) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {10, "ten"}, {20, "twenty"}, {30, "thirty"}};
 
   auto it = tree.find(20);
@@ -187,7 +187,7 @@ TEST(AVLTreeTest, Find) {
 
 // Тесты на lower_bound и upper_bound
 TEST(AVLTreeTest, LowerBoundUpperBound) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {10, "ten"}, {20, "twenty"}, {30, "thirty"}, {40, "forty"}};
 
   // lower_bound для несуществующего значения (ожидается 30)
@@ -215,7 +215,7 @@ TEST(AVLTreeTest, LowerBoundUpperBound) {
 
 // Тест на метод equal_range
 TEST(AVLTreeTest, EqualRange) {
-  AVLTree<int, std::string> tree;
+  avl_tree<int, std::string> tree;
   // Вставляем несколько дубликатов
   tree.insert(std::pair(100, "hundred"));
   tree.insert(std::pair(50, "fifty"));
@@ -237,7 +237,7 @@ TEST(AVLTreeTest, EqualRange) {
 
 // Тест на метод insert_many (вариативная вставка)
 TEST(AVLTreeTest, InsertMany) {
-  AVLTree<int, std::string> tree;
+  avl_tree<int, std::string> tree;
   auto results = tree.insert_many(std::pair(5, "five"), std::pair(2, "two"),
                                   std::pair(8, "eight"), std::pair(6, "six"),
                                   std::pair(10, "ten"));
@@ -259,7 +259,7 @@ TEST(AVLTreeTest, InsertMany) {
 // Тест итераторов (прямой и обратный обход)
 TEST(AVLTreeTest, IteratorTraversal) {
   // 15, 10, 20, 8, 12, 16, 25
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {15, "fifteen"}, {10, "ten"},     {20, "twenty"},     {8, "eight"},
       {12, "twelve"},  {16, "sixteen"}, {25, "twenty five"}};
 
@@ -289,7 +289,7 @@ TEST(AVLTreeTest, IteratorTraversal) {
 
 // Тест на метод clear
 TEST(AVLTreeTest, Clear) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {1, "one"}, {2, "two"}, {3, "three"}, {4, "four"}, {5, "five"}};
 
   EXPECT_FALSE(tree.empty());
@@ -301,7 +301,7 @@ TEST(AVLTreeTest, Clear) {
 
 // Тест на max_size
 TEST(AVLTreeTest, MaxSize) {
-  AVLTree<int, int> tree;
+  avl_tree<int, int> tree;
   EXPECT_GT(tree.max_size(), 0u);
 }
 
@@ -311,13 +311,13 @@ TEST(AVLTreeTest, MaxSize) {
 
 // Тест для константных begin() и end()
 TEST(AVLTreeConstTest, ConstBeginEnd) {
-  AVLTree<int, std::string> tree = {{10, "ten"},
-                                    {20, "twenty"},
-                                    {30, "thirty"},
-                                    {40, "forty"},
-                                    {50, "fifty"}};
+  avl_tree<int, std::string> tree = {{10, "ten"},
+                                     {20, "twenty"},
+                                     {30, "thirty"},
+                                     {40, "forty"},
+                                     {50, "fifty"}};
 
-  const AVLTree<int, std::string>& const_tree = tree;
+  const avl_tree<int, std::string>& const_tree = tree;
 
   auto it = const_tree.begin();
   auto end = const_tree.end();
@@ -335,10 +335,10 @@ TEST(AVLTreeConstTest, ConstBeginEnd) {
 
 // Тест для константного метода find()
 TEST(AVLTreeConstTest, ConstFind) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {2, "two"}, {3, "three"}, {5, "five"}, {7, "seven"}, {11, "eleven"}};
 
-  const AVLTree<int, std::string>& const_tree = tree;
+  const avl_tree<int, std::string>& const_tree = tree;
 
   auto it = const_tree.find(7);
   ASSERT_NE(it, const_tree.end());
@@ -351,10 +351,10 @@ TEST(AVLTreeConstTest, ConstFind) {
 // Тест для константных lower_bound() и upper_bound()
 TEST(AVLTreeConstTest, ConstLowerBoundUpperBound) {
   // {1, 3, 5, 7, 9};
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {1, "one"}, {3, "three"}, {5, "five"}, {7, "seven"}, {9, "nine"}};
 
-  const AVLTree<int, std::string>& const_tree = tree;
+  const avl_tree<int, std::string>& const_tree = tree;
 
   auto lb = const_tree.lower_bound(6);
   ASSERT_NE(lb, const_tree.end());
@@ -372,14 +372,14 @@ TEST(AVLTreeConstTest, ConstLowerBoundUpperBound) {
 
 // Тест для константного метода equal_range()
 TEST(AVLTreeConstTest, ConstEqualRange) {
-  AVLTree<int, std::string> tree;
+  avl_tree<int, std::string> tree;
   tree.insert(std::pair(100, "hundred"));
   tree.insert(std::pair(50, "fifty"));
   tree.insert(std::pair(100, "hundred"));
   tree.insert(std::pair(150, "hundred fifty"));
   tree.insert(std::pair(100, "hundred"));
 
-  const AVLTree<int, std::string>& const_tree = tree;
+  const avl_tree<int, std::string>& const_tree = tree;
   auto range = const_tree.equal_range(100);
   size_t count = 0;
   for (auto it = range.first; it != range.second; ++it) {
@@ -394,12 +394,12 @@ TEST(AVLTreeConstTest, ConstEqualRange) {
 
 // Тест для константных методов count() и contains()
 TEST(AVLTreeConstTest, ConstCountContains) {
-  AVLTree<int, std::string> tree;
+  avl_tree<int, std::string> tree;
   tree.insert(std::pair(42, "forty two"));
   tree.insert(std::pair(42, "forty two"));
   tree.insert(std::pair(100, "hundred"));
 
-  const AVLTree<int, std::string>& const_tree = tree;
+  const avl_tree<int, std::string>& const_tree = tree;
   EXPECT_EQ(const_tree.count(42), 2u);
   EXPECT_TRUE(const_tree.contains(42));
   EXPECT_FALSE(const_tree.contains(256));
@@ -407,11 +407,11 @@ TEST(AVLTreeConstTest, ConstCountContains) {
 
 // Тест обхода дерева с использованием константных итераторов
 TEST(AVLTreeConstTest, ConstIteratorTraversal) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {8, "eight"},     {3, "three"}, {10, "ten"},  {1, "one"},      {6, "six"},
       {14, "fourteen"}, {4, "four"},  {7, "seven"}, {13, "thirteen"}};
 
-  const AVLTree<int, std::string>& const_tree = tree;
+  const avl_tree<int, std::string>& const_tree = tree;
 
   std::vector<std::pair<int, std::string>> in_order;
   for (auto it = const_tree.begin(); it != const_tree.end(); ++it)
@@ -426,7 +426,7 @@ TEST(AVLTreeConstTest, ConstIteratorTraversal) {
 }
 
 TEST(AVLTreeConstTest, DecrementOperator) {
-  s21::AVLTree<int, std::string> tree = {
+  s21::avl_tree<int, std::string> tree = {
       {5, "five"}, {3, "three"}, {7, "seven"}, {2, "two"},
       {4, "four"}, {6, "six"},   {8, "eight"}};
 
@@ -436,7 +436,7 @@ TEST(AVLTreeConstTest, DecrementOperator) {
 
   std::vector<std::pair<int, std::string>> actual;
 
-  s21::AVLTree<int, std::string>::const_iterator it = tree.end();
+  s21::avl_tree<int, std::string>::const_iterator it = tree.end();
 
   while (it != tree.begin()) {
     --it;
@@ -446,7 +446,7 @@ TEST(AVLTreeConstTest, DecrementOperator) {
 }
 
 TEST(AVLTreeConstTest, ConstIteratorTraversal_2) {
-  AVLTree<int, std::string> tree = {
+  avl_tree<int, std::string> tree = {
       {8, "eight"},    {3, "three"},     {10, "ten"}, {1, "one"},
       {1, "one"},      {1, "one"},       {1, "one"},  {1, "one"},
       {1, "one"},      {1, "one"},       {1, "one"},  {1, "one"},
@@ -454,7 +454,7 @@ TEST(AVLTreeConstTest, ConstIteratorTraversal_2) {
       {6, "six"},      {14, "fourteen"}, {4, "four"}, {7, "seven"},
       {13, "thirteen"}};
 
-  const AVLTree<int, std::string>& const_tree = tree;
+  const avl_tree<int, std::string>& const_tree = tree;
 
   std::vector<std::pair<int, std::string>> in_order;
   for (auto it = const_tree.begin(); it != const_tree.end(); ++it)
