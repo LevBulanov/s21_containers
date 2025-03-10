@@ -79,7 +79,10 @@ class map : public avl_tree<Key, T> {
 
   template <typename... Args>
   s21::vector<std::pair<iterator, bool>> insert_many(Args&&... args) {
-    return s21::vector<std::pair<iterator, bool>>();
+    s21::vector<std::pair<iterator, bool>> results;
+    results.reserve(sizeof...(args));
+    ((results.push_back(insert(std::forward<Args>(args)))), ...);
+    return results;
   }
 };
 }  // namespace s21

@@ -212,3 +212,23 @@ TEST(MapTest, Contains) {
   EXPECT_TRUE(map.contains("three"));
   EXPECT_FALSE(map.contains("four"));
 }
+
+TEST(MapTest, InsertMany) {
+  s21::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
+  auto v1 = map.insert_many();
+  EXPECT_EQ(map.size(), 3);
+  EXPECT_EQ(v1.size(), 0);
+  auto v2 = map.insert_many(std::pair{"four", 4});
+  EXPECT_EQ(map.size(), 4);
+  EXPECT_EQ(v2.size(), 1);
+  EXPECT_EQ(v2[0].first->first, "four");
+  EXPECT_EQ(v2[0].second, true);
+  auto v3 = map.insert_many(std::pair{"five", 5}, std::pair{"six", 6});
+  EXPECT_EQ(map.size(), 6);
+  EXPECT_EQ(v3.size(), 2);
+  EXPECT_EQ(v3[0].first->first, "five");
+  EXPECT_EQ(v3[0].first->second, 5);
+  EXPECT_EQ(v3[0].second, true);
+  EXPECT_EQ(v3[1].first->first, "six");
+  EXPECT_EQ(v3[1].second, true);
+}
