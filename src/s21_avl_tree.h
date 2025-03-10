@@ -13,8 +13,7 @@ class avl_tree {
  public:
   using key_type = Key;
   using mapped_type = T;
-  // TODO restore <const key_type, ...
-  using value_type = std::pair<key_type, mapped_type>;
+  using value_type = std::pair<const key_type, mapped_type>;
   using reference = value_type&;
   using const_reference = const value_type&;
   using size_type = size_t;
@@ -38,8 +37,7 @@ class avl_tree {
 
   class iterator {
    public:
-    // TODO remove?
-    // using pointer = Key*;
+    using pointer = value_type*;
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type = std::ptrdiff_t;
 
@@ -48,8 +46,7 @@ class avl_tree {
         : node_(node), tree_(tree) {}
 
     reference operator*() { return node_->data; }
-    // TODO remove?
-    // pointer operator->() { return &(node_->data); }
+    pointer operator->() { return &(node_->data); }
 
     iterator& operator++() {
       if (node_ == nullptr) return *this;
@@ -451,7 +448,8 @@ class avl_tree {
         return temp;
       } else {
         Node* temp = minValueNode(root->right);
-        root->data = temp->data;
+        root->data.second = temp->data.second;
+        const_cast<key_type&>(root->data.first) = temp->data.first;
         root->right = eraseNode(root->right, temp, root);
       }
     } else {
@@ -489,7 +487,8 @@ class avl_tree {
 
       } else {
         Node* temp = minValueNode(node->right);
-        node->data = temp->data;
+        node->data.second = temp->data.second;
+        const_cast<key_type&>(node->data.first) = temp->data.first;
         node->right = remove(node->right, temp->key(), node);
       }
     }
