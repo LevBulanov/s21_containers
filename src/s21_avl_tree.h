@@ -8,40 +8,45 @@
 
 namespace s21 {
 
-template <typename Key>
+template <typename Key, typename T>
 class AVLTree {
  public:
-  using value_type = Key;
   using key_type = Key;
+  using mapped_type = T;
+  using value_type = std::pair<const key_type, mapped_type>;
   using reference = value_type&;
   using const_reference = const value_type&;
   using size_type = size_t;
 
   struct Node {
-    Key key;
+    value_type data;
     Node* left;
     Node* right;
     Node* parent;
     int height;
 
-    Node(const Key& key, Node* parent = nullptr)
-        : key(key), left(nullptr), right(nullptr), parent(parent), height(1) {}
+    Node(value_type data, Node* parent = nullptr)
+        : data(data),
+          left(nullptr),
+          right(nullptr),
+          parent(parent),
+          height(1) {}
+
+    key_type key() const { return data.first; }
   };
 
   class iterator {
    public:
-    using value_type = AVLTree::value_type;
-    using reference = AVLTree::reference;
     using pointer = Key*;
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type = std::ptrdiff_t;
 
     iterator() : node_(nullptr), tree_(nullptr) {}
-    iterator(Node* node, const AVLTree<value_type>* tree)
+    iterator(Node* node, const AVLTree<key_type, mapped_type>* tree)
         : node_(node), tree_(tree) {}
 
-    reference operator*() { return node_->key; }
-    pointer operator->() { return &(node_->key); }
+    reference operator*() { return node_->data; }
+    pointer operator->() { return &(node_->data); }
 
     iterator& operator++() {
       if (node_ == nullptr) return *this;
@@ -82,8 +87,8 @@ class AVLTree {
 
    private:
     Node* node_;
-    const AVLTree<value_type>* tree_;
-    friend class AVLTree<value_type>;
+    const AVLTree<key_type, mapped_type>* tree_;
+    friend class AVLTree<key_type, mapped_type>;
 
     Node* minimum(Node* node) const {
       while (node and node->left != nullptr) node = node->left;
@@ -98,14 +103,12 @@ class AVLTree {
 
   class const_iterator {
    public:
-    using value_type = AVLTree::value_type;
-    using const_reference = AVLTree::const_reference;
     using pointer = const Key*;
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type = std::ptrdiff_t;
 
     const_iterator() : node_(nullptr), tree_(nullptr) {}
-    const_iterator(Node* node, const AVLTree<value_type>* tree)
+    const_iterator(Node* node, const AVLTree<key_type, mapped_type>* tree)
         : node_(node), tree_(tree) {}
     const_iterator(const iterator& it) : node_(it.node_), tree_(it.tree_) {}
 
@@ -153,8 +156,8 @@ class AVLTree {
 
    private:
     Node* node_;
-    const AVLTree<value_type>* tree_;
-    friend class AVLTree<value_type>;
+    const AVLTree<key_type, mapped_type>* tree_;
+    friend class AVLTree<key_type, mapped_type>;
 
     Node* minimum(Node* node) const {
       while (node and node->left != nullptr) node = node->left;
@@ -210,9 +213,9 @@ class AVLTree {
     root_ = nullptr;
   }
 
-  iterator insert(const Key& key) {
+  iterator insert(const value_type& val) {
     Node* insertedNode = nullptr;
-    root_ = insert(root_, key, nullptr, &insertedNode);
+    root_ = insert(root_, val, nullptr, &insertedNode);
     return iterator(insertedNode, this);
   }
 
@@ -386,15 +389,16 @@ class AVLTree {
   }
 
   // копирующая вставка по ключю
-  Node* insert(Node* node, const Key& key, Node* parent, Node** inserted_node) {
+  Node* insert(Node* node, const value_type val, Node* parent,
+               Node** inserted_node) {
     if (node == nullptr) {
-      *inserted_node = new Node(key, parent);
+      *inserted_node = new Node(val, parent);
       return *inserted_node;
     }
-    if (key < node->key) {
-      node->left = insert(node->left, key, node, inserted_node);
+    if (val.first < node->key()) {
+      node->left = insert(node->left, val, node, inserted_node);
     } else {
-      node->right = insert(node->right, key, node, inserted_node);
+      node->right = insert(node->right, val, node, inserted_node);
     }
     node->height = std::max(height(node->left), height(node->right)) + 1;
     Node* balanced = balance(node);
@@ -508,10 +512,10 @@ class AVLTree {
     if (node == nullptr) {
       return iterator(node, this);
     }
-    if (key == node->key) {
+    if (key == node->key()) {
       return iterator(node, this);
     }
-    if (key < node->key) {
+    if (key < node->key()) {
       return search(node->left, key);
     }
     return search(node->right, key);
