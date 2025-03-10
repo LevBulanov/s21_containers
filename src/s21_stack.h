@@ -11,6 +11,7 @@ namespace s21 {
 template <typename value_type>
 class stack {
  public:
+  // TODO change to using ... = ... ;
   typedef value_type& reference;
   typedef const value_type& const_reference;
   typedef size_t size_type;
@@ -57,8 +58,8 @@ class stack {
   }
 
   const_reference top() const {
-    if (ptr_top_ == nullptr) {
-      throw std::range_error("Stack is empty");
+    if (empty()) {
+      throw std::out_of_range("Stack is empty");
     }
     return ptr_top_->get_data();
   }

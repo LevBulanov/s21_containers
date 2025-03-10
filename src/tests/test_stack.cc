@@ -164,3 +164,8 @@ TEST(StackTest, insertMany4) {
   stack1.pop();
   EXPECT_EQ(stack1.top(), 'a');
 }
+
+TEST(StackTest, OutOfRange) {
+  s21::stack<int> stack1;
+  EXPECT_THROW(stack1.top(), std::out_of_range);
+}
