@@ -27,7 +27,7 @@ class set : public avl_tree<Key, Key> {
    public:
     iterator() = default;
     iterator(base_iterator it) : it_(it) {}
-    reference operator*() { return (*it_).first; }
+    const_reference operator*() { return (*it_).first; }
 
     bool operator==(const iterator& other) const {
       return this->it_ == other.it_;
