@@ -181,7 +181,7 @@ TEST(multisetTest, LowerBoundUpperBound) {
   ASSERT_NE(ub_eq, tree.end());
   EXPECT_EQ(*ub_eq, 30);
 
-  // Для ключа, превышающего максимальный элемент, итераторы должны быть end()
+  // Для ключа, превышающего максимальный элемент, итераторы должны быть  end()
   EXPECT_EQ(tree.lower_bound(50), tree.end());
   EXPECT_EQ(tree.upper_bound(50), tree.end());
 }
@@ -366,7 +366,7 @@ TEST(multisetConstTest, ConstIteratorTraversal) {
 }
 
 TEST(multisetConstTest, DecrementOperator) {
-  s21::multiset<int> tree{5, 3, 7, 2, 4, 6, 8};
+  s21::multiset<int> const tree{5, 3, 7, 2, 4, 6, 8};
 
   std::vector<int> expected = {8, 7, 6, 5, 4, 3, 2};
   std::vector<int> actual;

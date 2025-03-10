@@ -12,7 +12,7 @@ TBD = tests/build
 
 LINK_LIBS = -lstdc++
 LINK_TEST_LIBS = -lgtest -lgtest_main -lm
-VALGRIND = CK_FORK=no valgrind --vgdb=no --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --read-var-info=yes ./$(TEST_RUNNER)
+VALGRIND = CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --read-var-info=yes ./$(TEST_RUNNER)
 
 clean:
 	rm -rf *.o
