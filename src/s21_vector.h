@@ -41,11 +41,40 @@ class vector {
 
    private:
     T* ptr_ = nullptr;
-
     friend class vector;
   };
+
+  class VectorConstIterator {
+   public:
+    VectorConstIterator(T* ptr = nullptr) : ptr_(ptr) {}
+
+    reference operator*() const { return *ptr_; }
+
+    VectorConstIterator& operator++() {
+      ++ptr_;
+      return *this;
+    }
+
+    VectorConstIterator& operator--() {
+      --ptr_;
+      return *this;
+    }
+
+    bool operator==(const VectorConstIterator& other) const {
+      return ptr_ == other.ptr_;
+    }
+
+    bool operator!=(const VectorConstIterator& other) const {
+      return ptr_ != other.ptr_;
+    }
+
+   private:
+    T* ptr_ = nullptr;
+    friend class vector;
+  };
+
   using iterator = VectorIterator;
-  using const_iterator = const VectorIterator;
+  using const_iterator = const VectorConstIterator;
 
   vector() : vector(3) {}
 
@@ -111,8 +140,10 @@ class vector {
   T* data() { return data_; }
 
   iterator begin() { return iterator(data_); }
+  const_iterator begin() const { return const_iterator(data_); }
 
   iterator end() { return iterator(data_ + size_); }
+  const_iterator end() const { return const_iterator(data_ + size_); }
 
   bool empty() { return size_ == 0; }
 
@@ -200,7 +231,7 @@ class vector {
   }
 
   template <typename... Args>
-  iterator insert_many(const_iterator pos, Args&&... args) {
+  iterator insert_many(iterator pos, Args&&... args) {
     size_type index = (pos.ptr_ - data_);
     size_type i = 0;
     for (auto&& arg : {std::forward<Args>(args)...}) {

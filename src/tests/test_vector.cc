@@ -82,7 +82,7 @@ TEST(VectorTest, Back) {
 
 TEST(VectorTest, Data) {
   s21::vector<int> vec = {1, 2, 3};
-  int *data = vec.data();
+  int* data = vec.data();
   EXPECT_EQ(data[0], 1);
   EXPECT_EQ(data[1], 2);
   EXPECT_EQ(data[2], 3);
@@ -270,4 +270,15 @@ TEST(VectorTest, UpdateInplace) {
   EXPECT_EQ(vec[0], 1);
   EXPECT_EQ(vec[1], 4);
   EXPECT_EQ(vec[2], 3);
+}
+
+TEST(VectorTest, ConstIteratorTraversal) {
+  s21::vector<int> vec = {1, 2, 3};
+  const s21::vector<int>& const_vec = vec;
+  std::vector<int> traversal;
+  for (auto it = const_vec.begin(); it != const_vec.end(); ++it) {
+    traversal.push_back(*it);
+  }
+  std::vector<int> expected = {1, 2, 3};
+  EXPECT_EQ(traversal, expected);
 }
