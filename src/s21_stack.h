@@ -34,7 +34,7 @@ class stack {
   // copy assignment operator
   stack& operator=(const stack& s) {
     this->clear();
-    node<value_type>* ptr_s = s.ptr_top_;
+    link_node<value_type>* ptr_s = s.ptr_top_;
     if (s.ptr_top_ != nullptr) {
       while (ptr_s->get_next() != nullptr) {
         ptr_s = ptr_s->get_next();
@@ -70,7 +70,7 @@ class stack {
 
   void push(const_reference value) {
     ++size_;
-    node<value_type>* new_node = new node<value_type>;
+    link_node<value_type>* new_node = new link_node<value_type>;
     new_node->set_data(value);
     new_node->set_next(ptr_top_);
     new_node->set_previous(nullptr);
@@ -81,7 +81,7 @@ class stack {
   void pop() {
     if (size_ != 0) {
       --size_;
-      node<value_type>* tmp = ptr_top_;
+      link_node<value_type>* tmp = ptr_top_;
       ptr_top_ = ptr_top_->get_next();
       delete tmp;
       if (ptr_top_ != nullptr) ptr_top_->set_previous(nullptr);
@@ -89,7 +89,7 @@ class stack {
   }
 
   void swap(stack& other) noexcept {
-    node<value_type>* ptr_tmp = other.ptr_top_;
+    link_node<value_type>* ptr_tmp = other.ptr_top_;
     size_type size_tmp = other.size_;
     other.size_ = this->size_;
     other.ptr_top_ = this->ptr_top_;
@@ -103,11 +103,11 @@ class stack {
   }
 
  private:
-  node<value_type>* ptr_top_ = nullptr;
+  link_node<value_type>* ptr_top_ = nullptr;
   size_type size_ = 0;
 
   void clear() {
-    node<value_type>* ptr_tmp = ptr_top_;
+    link_node<value_type>* ptr_tmp = ptr_top_;
     while (ptr_top_ != nullptr) {
       ptr_top_ = ptr_tmp->get_next();
       delete ptr_tmp;

@@ -22,7 +22,7 @@ class list {
   class const_iterator;
   class iterator {
    public:
-    explicit iterator(node<value_type>* p) : ptr_(p) {}
+    explicit iterator(link_node<value_type>* p) : ptr_(p) {}
     iterator(iterator& it) : ptr_(it.ptr_) {};
     iterator(const iterator& it) : ptr_(it.ptr_) {};
     iterator(const_iterator& it) : ptr_(it.ptr_) {};
@@ -56,12 +56,12 @@ class list {
     friend class list;
 
    private:
-    node<value_type>* ptr_;
+    link_node<value_type>* ptr_;
   };
 
   class const_iterator {
    public:
-    explicit const_iterator(node<value_type>* p) : ptr_(p) {}
+    explicit const_iterator(link_node<value_type>* p) : ptr_(p) {}
     const_iterator(iterator& it) : ptr_(it.ptr_) {};
     const_iterator(const iterator& it) : ptr_(it.ptr_) {};
 
@@ -80,12 +80,12 @@ class list {
     friend class list;
 
    private:
-    node<value_type>* ptr_;
+    link_node<value_type>* ptr_;
   };
 
   // default constructor, creates empty stack
   list() {
-    node<value_type>* new_node = new node<value_type>;
+    link_node<value_type>* new_node = new link_node<value_type>;
     new_node->set_data({0});
     new_node->set_next(new_node);
     new_node->set_previous(new_node);
@@ -146,7 +146,7 @@ class list {
 
   size_type max_size() const noexcept {
     return std::numeric_limits<std::size_t>::max() / 2 /
-           sizeof(node<value_type>);
+           sizeof(link_node<value_type>);
   }
 
   // List Modifiers
@@ -158,8 +158,8 @@ class list {
 
   iterator insert(iterator pos, const_reference value) {
     ++size_;
-    node<value_type>* new_node = new node<value_type>;
-    node<value_type>* prev = pos.ptr_->get_previous();
+    link_node<value_type>* new_node = new link_node<value_type>;
+    link_node<value_type>* prev = pos.ptr_->get_previous();
     new_node->set_data(value);
     new_node->set_next(pos.ptr_);
     pos.ptr_->set_previous(new_node);
@@ -173,8 +173,8 @@ class list {
     const iterator it_end = end();
     if (!empty() && pos != it_end) {
       --size_;
-      node<value_type>* prev = pos.ptr_->get_previous();
-      node<value_type>* next = pos.ptr_->get_next();
+      link_node<value_type>* prev = pos.ptr_->get_previous();
+      link_node<value_type>* next = pos.ptr_->get_next();
       prev->set_next(next);
       next->set_previous(prev);
       delete pos.ptr_;
@@ -202,7 +202,7 @@ class list {
   }
 
   void swap(list& other) noexcept {
-    node<value_type>* end_tmp = other.ptr_end_;
+    link_node<value_type>* end_tmp = other.ptr_end_;
     size_type size_tmp = other.size_;
     other.ptr_end_ = ptr_end_;
     other.size_ = size_;
@@ -244,8 +244,8 @@ class list {
   }
 
   void reverse() noexcept {
-    node<value_type>* ptr = ptr_end_->get_next();
-    node<value_type>* ptr_tmp = nullptr;
+    link_node<value_type>* ptr = ptr_end_->get_next();
+    link_node<value_type>* ptr_tmp = nullptr;
     while (ptr != ptr_end_) {
       ptr_tmp = ptr->get_next();
       ptr->set_next(ptr->get_previous());
@@ -331,7 +331,7 @@ class list {
     }
   }
 
-  node<value_type>* ptr_end_;
+  link_node<value_type>* ptr_end_;
   size_type size_;
 };
 
