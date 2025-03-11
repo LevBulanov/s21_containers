@@ -18,14 +18,14 @@ class avl_tree {
   using const_reference = const value_type&;
   using size_type = size_t;
 
-  struct Node {
+  struct tree_node {
     value_type data;
-    Node* left;
-    Node* right;
-    Node* parent;
+    tree_node* left;
+    tree_node* right;
+    tree_node* parent;
     int height;
 
-    Node(value_type data, Node* parent = nullptr)
+    tree_node(value_type data, tree_node* parent = nullptr)
         : data(data),
           left(nullptr),
           right(nullptr),
@@ -42,7 +42,7 @@ class avl_tree {
     using difference_type = std::ptrdiff_t;
 
     iterator() : node_(nullptr), tree_(nullptr) {}
-    iterator(Node* node, const avl_tree<key_type, mapped_type>* tree)
+    iterator(tree_node* node, const avl_tree<key_type, mapped_type>* tree)
         : node_(node), tree_(tree) {}
 
     reference operator*() { return node_->data; }
@@ -53,7 +53,7 @@ class avl_tree {
       if (node_->right != nullptr) {
         node_ = minimum(node_->right);
       } else {
-        Node* p = node_->parent;
+        tree_node* p = node_->parent;
         while (p != nullptr and node_ == p->right) {
           node_ = p;
           p = p->parent;
@@ -69,7 +69,7 @@ class avl_tree {
       } else if (node_->left != nullptr) {
         node_ = maximum(node_->left);
       } else {
-        Node* p = node_->parent;
+        tree_node* p = node_->parent;
         while (p != nullptr and node_ == p->left) {
           node_ = p;
           p = p->parent;
@@ -86,16 +86,16 @@ class avl_tree {
     bool operator!=(const iterator& other) const { return !(*this == other); }
 
    protected:
-    Node* node_;
+    tree_node* node_;
     const avl_tree<key_type, mapped_type>* tree_;
     friend class avl_tree<key_type, mapped_type>;
 
-    Node* minimum(Node* node) const {
+    tree_node* minimum(tree_node* node) const {
       while (node and node->left != nullptr) node = node->left;
       return node;
     }
 
-    Node* maximum(Node* node) const {
+    tree_node* maximum(tree_node* node) const {
       while (node and node->right != nullptr) node = node->right;
       return node;
     }
@@ -108,7 +108,7 @@ class avl_tree {
     using difference_type = std::ptrdiff_t;
 
     const_iterator() : node_(nullptr), tree_(nullptr) {}
-    const_iterator(Node* node, const avl_tree<key_type, mapped_type>* tree)
+    const_iterator(tree_node* node, const avl_tree<key_type, mapped_type>* tree)
         : node_(node), tree_(tree) {}
     const_iterator(const iterator& it) : node_(it.node_), tree_(it.tree_) {}
 
@@ -120,7 +120,7 @@ class avl_tree {
       if (node_->right != nullptr) {
         node_ = minimum(node_->right);
       } else {
-        Node* p = node_->parent;
+        tree_node* p = node_->parent;
         while (p != nullptr and node_ == p->right) {
           node_ = p;
           p = p->parent;
@@ -136,7 +136,7 @@ class avl_tree {
       } else if (node_->left != nullptr) {
         node_ = maximum(node_->left);
       } else {
-        Node* p = node_->parent;
+        tree_node* p = node_->parent;
         while (p != nullptr and node_ == p->left) {
           node_ = p;
           p = p->parent;
@@ -155,16 +155,16 @@ class avl_tree {
     }
 
    private:
-    Node* node_;
+    tree_node* node_;
     const avl_tree<key_type, mapped_type>* tree_;
     friend class avl_tree<key_type, mapped_type>;
 
-    Node* minimum(Node* node) const {
+    tree_node* minimum(tree_node* node) const {
       while (node and node->left != nullptr) node = node->left;
       return node;
     }
 
-    Node* maximum(Node* node) const {
+    tree_node* maximum(tree_node* node) const {
       while (node and node->right != nullptr) node = node->right;
       return node;
     }
@@ -205,7 +205,7 @@ class avl_tree {
   }
 
   size_type max_size() const {
-    return std::numeric_limits<std::size_t>::max() / sizeof(Node) / 2;
+    return std::numeric_limits<std::size_t>::max() / sizeof(tree_node) / 2;
   }
 
   void clear() {
@@ -214,7 +214,7 @@ class avl_tree {
   }
 
   iterator insert(const value_type& val) {
-    Node* insertedNode = nullptr;
+    tree_node* insertedNode = nullptr;
     root_ = insert(root_, val, nullptr, &insertedNode);
     return iterator(insertedNode, this);
   }
@@ -230,7 +230,7 @@ class avl_tree {
 
   void swap(avl_tree& other) {
     if (this == &other) return;
-    Node* temp = this->root_;
+    tree_node* temp = this->root_;
     this->root_ = other.root_;
     other.root_ = temp;
   }
@@ -298,19 +298,19 @@ class avl_tree {
   ~avl_tree() { destroy(root_); }
 
  protected:
-  Node* root_;
+  tree_node* root_;
   friend class iterator;
 
-  Node* copyTree(Node* node, Node* parent) {
+  tree_node* copyTree(tree_node* node, tree_node* parent) {
     if (!node) return nullptr;
-    Node* newNode = new Node(node->data, parent);
+    tree_node* newNode = new tree_node(node->data, parent);
     newNode->left = copyTree(node->left, newNode);
     newNode->right = copyTree(node->right, newNode);
     newNode->height = node->height;
     return newNode;
   }
 
-  void destroy(Node* node) {
+  void destroy(tree_node* node) {
     if (node) {
       destroy(node->left);
       destroy(node->right);
@@ -318,15 +318,15 @@ class avl_tree {
     }
   }
 
-  int height(Node* node) { return node ? node->height : 0; }
+  int height(tree_node* node) { return node ? node->height : 0; }
 
-  int getBalance(Node* node) {
+  int getBalance(tree_node* node) {
     return node ? (height(node->left) - height(node->right)) : 0;
   }
 
-  Node* rotateRight(Node* y) {
-    Node* x = y->left;
-    Node* T2 = x->right;
+  tree_node* rotateRight(tree_node* y) {
+    tree_node* x = y->left;
+    tree_node* T2 = x->right;
 
     x->right = y;
     y->left = T2;
@@ -340,9 +340,9 @@ class avl_tree {
     return x;
   }
 
-  Node* rotateLeft(Node* x) {
-    Node* y = x->right;
-    Node* T2 = y->left;
+  tree_node* rotateLeft(tree_node* x) {
+    tree_node* y = x->right;
+    tree_node* T2 = y->left;
 
     y->left = x;
     x->right = T2;
@@ -357,15 +357,15 @@ class avl_tree {
     return y;
   }
 
-  Node* minValueNode(Node* node) const {
-    Node* current = node;
+  tree_node* minValueNode(tree_node* node) const {
+    tree_node* current = node;
     while (current and current->left != nullptr) {
       current = current->left;
     }
     return current;
   }
 
-  Node* balance(Node* node) {
+  tree_node* balance(tree_node* node) {
     int balanceFactor = getBalance(node);
     // Left Left
     if (balanceFactor > 1 and getBalance(node->left) >= 0) {
@@ -389,10 +389,10 @@ class avl_tree {
   }
 
   // копирующая вставка по ключю
-  Node* insert(Node* node, const value_type val, Node* parent,
-               Node** inserted_node) {
+  tree_node* insert(tree_node* node, const value_type val, tree_node* parent,
+                    tree_node** inserted_node) {
     if (node == nullptr) {
-      *inserted_node = new Node(val, parent);
+      *inserted_node = new tree_node(val, parent);
       return *inserted_node;
     }
     if (val.first < node->key()) {
@@ -401,14 +401,14 @@ class avl_tree {
       node->right = insert(node->right, val, node, inserted_node);
     }
     node->height = std::max(height(node->left), height(node->right)) + 1;
-    Node* balanced = balance(node);
+    tree_node* balanced = balance(node);
     balanced->parent = parent;
     return balanced;
   }
 
   // Вспомогательный метод для вставки уже выделенного узла.
   // Перед вставкой нужно обнулить левый и правый дочерние указатели узла.
-  Node* insertNode(Node* curr, Node* node, Node* parent) {
+  tree_node* insertNode(tree_node* curr, tree_node* node, tree_node* parent) {
     if (!curr) {
       node->parent = parent;
       node->left = node->right = nullptr;
@@ -423,7 +423,7 @@ class avl_tree {
     return balance(curr);
   }
 
-  void mergeNodes(Node* node) {
+  void mergeNodes(tree_node* node) {
     if (!node) return;
     mergeNodes(node->left);
     mergeNodes(node->right);
@@ -435,19 +435,19 @@ class avl_tree {
   }
 
   // удаляет по указателю
-  Node* eraseNode(Node* root, Node* target, Node* parent) {
+  tree_node* eraseNode(tree_node* root, tree_node* target, tree_node* parent) {
     if (root == nullptr) return root;
     root->parent = parent;
     if (root == target) {
       if (root->left == nullptr || root->right == nullptr) {
-        Node* temp = root->left ? root->left : root->right;
+        tree_node* temp = root->left ? root->left : root->right;
         delete root;
         if (temp != nullptr) {
           temp->parent = parent;
         }
         return temp;
       } else {
-        Node* temp = minValueNode(root->right);
+        tree_node* temp = minValueNode(root->right);
         root->data.second = temp->data.second;
         // TODO explore alternatives
         const_cast<key_type&>(root->data.first) = temp->data.first;
@@ -465,7 +465,7 @@ class avl_tree {
   }
 
   // удаляет первый ключ
-  Node* remove(Node* node, const Key& key, Node* parent) {
+  tree_node* remove(tree_node* node, const Key& key, tree_node* parent) {
     if (node == nullptr) {
       return node;
     }
@@ -476,7 +476,7 @@ class avl_tree {
       node->right = remove(node->right, key, node);
     } else {
       if (node->left == nullptr || node->right == nullptr) {
-        Node* temp = node->left ? node->left : node->right;
+        tree_node* temp = node->left ? node->left : node->right;
         if (temp == nullptr) {
           delete node;
           return nullptr;
@@ -487,7 +487,7 @@ class avl_tree {
         }
 
       } else {
-        Node* temp = minValueNode(node->right);
+        tree_node* temp = minValueNode(node->right);
         node->data.second = temp->data.second;
         // TODO explore alternatives
         const_cast<key_type&>(node->data.first) = temp->data.first;
@@ -501,7 +501,7 @@ class avl_tree {
     return balance(node);
   }
 
-  size_type count(Node* node, const Key& key) const {
+  size_type count(tree_node* node, const Key& key) const {
     if (node == nullptr) return 0;
     if (key < node->key())
       return count(node->left, key);
@@ -512,7 +512,7 @@ class avl_tree {
     }
   }
 
-  iterator search(Node* node, const Key& key) const {
+  iterator search(tree_node* node, const Key& key) const {
     if (node == nullptr) {
       return iterator(node, this);
     }
@@ -525,8 +525,8 @@ class avl_tree {
     return search(node->right, key);
   }
 
-  iterator search_lower_bound(Node* node, const Key& key) const {
-    Node* res = nullptr;
+  iterator search_lower_bound(tree_node* node, const Key& key) const {
+    tree_node* res = nullptr;
     while (node != nullptr) {
       if (!(node->key() < key)) {  // node->key >= key
         res = node;
@@ -538,8 +538,8 @@ class avl_tree {
     return iterator(res, this);
   }
 
-  iterator search_upper_bound(Node* node, const Key& key) const {
-    Node* res = nullptr;
+  iterator search_upper_bound(tree_node* node, const Key& key) const {
+    tree_node* res = nullptr;
     while (node != nullptr) {
       if (key < node->key()) {
         res = node;

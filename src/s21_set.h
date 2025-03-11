@@ -16,7 +16,7 @@ class set : public avl_tree<Key, Key> {
   using reference = value_type&;
   using const_reference = const value_type&;
   using size_type = size_t;
-  using Node = typename s21::avl_tree<value_type, value_type>::Node;
+  using tree_node = typename s21::avl_tree<value_type, value_type>::tree_node;
   using base = typename s21::avl_tree<value_type, value_type>;
   using base_iterator =
       typename s21::avl_tree<value_type, value_type>::iterator;
@@ -137,7 +137,7 @@ class set : public avl_tree<Key, Key> {
     iterator it = iterator(this->find(value));
     std::pair<iterator, bool> result = {it, false};
     if (should_insert(it)) {
-      Node* insertedNode = nullptr;
+      tree_node* insertedNode = nullptr;
       this->root_ = avl_tree<value_type, value_type>::insert(
           this->root_, std::pair(value, value), nullptr, &insertedNode);
       result.first = iterator(base_iterator(insertedNode, this));
@@ -203,7 +203,7 @@ class set : public avl_tree<Key, Key> {
   virtual bool should_insert(iterator it) { return it == end(); }
 
  private:
-  void mergeNodes(Node* node) {
+  void mergeNodes(tree_node* node) {
     if (!node) return;
     mergeNodes(node->left);
     mergeNodes(node->right);
