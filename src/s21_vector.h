@@ -15,27 +15,27 @@ class vector {
   using const_reference = const T&;
   using size_type = size_t;
 
-  class VectorIterator {
+  class vector_iterator {
    public:
-    VectorIterator(T* ptr = nullptr) : ptr_(ptr) {}
+    vector_iterator(T* ptr = nullptr) : ptr_(ptr) {}
 
     reference operator*() const { return *ptr_; }
 
-    VectorIterator& operator++() {
+    vector_iterator& operator++() {
       ++ptr_;
       return *this;
     }
 
-    VectorIterator& operator--() {
+    vector_iterator& operator--() {
       --ptr_;
       return *this;
     }
 
-    bool operator==(const VectorIterator& other) const {
+    bool operator==(const vector_iterator& other) const {
       return ptr_ == other.ptr_;
     }
 
-    bool operator!=(const VectorIterator& other) const {
+    bool operator!=(const vector_iterator& other) const {
       return ptr_ != other.ptr_;
     }
 
@@ -44,27 +44,27 @@ class vector {
     friend class vector;
   };
 
-  class VectorConstIterator {
+  class vector_const_iterator {
    public:
-    VectorConstIterator(T* ptr = nullptr) : ptr_(ptr) {}
+    vector_const_iterator(T* ptr = nullptr) : ptr_(ptr) {}
 
     reference operator*() const { return *ptr_; }
 
-    VectorConstIterator& operator++() {
+    vector_const_iterator& operator++() {
       ++ptr_;
       return *this;
     }
 
-    VectorConstIterator& operator--() {
+    vector_const_iterator& operator--() {
       --ptr_;
       return *this;
     }
 
-    bool operator==(const VectorConstIterator& other) const {
+    bool operator==(const vector_const_iterator& other) const {
       return ptr_ == other.ptr_;
     }
 
-    bool operator!=(const VectorConstIterator& other) const {
+    bool operator!=(const vector_const_iterator& other) const {
       return ptr_ != other.ptr_;
     }
 
@@ -73,8 +73,8 @@ class vector {
     friend class vector;
   };
 
-  using iterator = VectorIterator;
-  using const_iterator = const VectorConstIterator;
+  using iterator = vector_iterator;
+  using const_iterator = const vector_const_iterator;
 
   vector() : vector(3) {}
 

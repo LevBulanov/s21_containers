@@ -92,7 +92,7 @@ class set : public avl_tree<Key, Key> {
   }
 
   set(const set& other) : set() {
-    this->root_ = this->copyTree(other.root_, nullptr);
+    this->root_ = this->copy_tree(other.root_, nullptr);
   }
 
   set(set&& other) noexcept : avl_tree<value_type, value_type>() {
@@ -105,7 +105,7 @@ class set : public avl_tree<Key, Key> {
   set& operator=(const set& other) {
     if (this != &other) {
       this->clear();
-      this->root_ = this->copyTree(other.root_, nullptr);
+      this->root_ = this->copy_tree(other.root_, nullptr);
     }
     return *this;
   }
@@ -137,10 +137,10 @@ class set : public avl_tree<Key, Key> {
     iterator it = iterator(this->find(value));
     std::pair<iterator, bool> result = {it, false};
     if (should_insert(it)) {
-      tree_node* insertedNode = nullptr;
+      tree_node* inserted_node = nullptr;
       this->root_ = avl_tree<value_type, value_type>::insert(
-          this->root_, std::pair(value, value), nullptr, &insertedNode);
-      result.first = iterator(base_iterator(insertedNode, this));
+          this->root_, std::pair(value, value), nullptr, &inserted_node);
+      result.first = iterator(base_iterator(inserted_node, this));
       result.second = true;
     }
     return result;
@@ -148,17 +148,17 @@ class set : public avl_tree<Key, Key> {
 
   void merge(set& other) {
     if (this == &other) return;
-    this->mergeNodes(other.root_);
+    this->merge_nodes(other.root_);
     other.root_ = nullptr;
   }
 
   iterator begin() {
-    return iterator(base_iterator(this->minValueNode(this->root_), this));
+    return iterator(base_iterator(this->min_value_node(this->root_), this));
   }
 
   const_iterator begin() const {
     return const_iterator(
-        base_const_iterator(this->minValueNode(this->root_), this));
+        base_const_iterator(this->min_value_node(this->root_), this));
   }
 
   iterator end() { return iterator(base_iterator(nullptr, this)); }
@@ -203,16 +203,16 @@ class set : public avl_tree<Key, Key> {
   virtual bool should_insert(iterator it) { return it == end(); }
 
  private:
-  void mergeNodes(tree_node* node) {
+  void merge_nodes(tree_node* node) {
     if (!node) return;
-    mergeNodes(node->left);
-    mergeNodes(node->right);
+    merge_nodes(node->left);
+    merge_nodes(node->right);
     // «Отрываем» данный узел от дерева-источника
     node->left = node->right = nullptr;
     node->parent = nullptr;
     // Вставляем узел в текущее дерево, если не дубль
     if (this->should_insert(node->key())) {
-      this->root_ = this->insertNode(this->root_, node, nullptr);
+      this->root_ = this->insert_node(this->root_, node, nullptr);
     } else {
       delete node;
     }

@@ -179,7 +179,7 @@ class avl_tree {
     }
   }
 
-  avl_tree(const avl_tree& other) : root_(copyTree(other.root_, nullptr)) {}
+  avl_tree(const avl_tree& other) : root_(copy_tree(other.root_, nullptr)) {}
 
   avl_tree(avl_tree&& other) noexcept : root_(other.root_) {
     other.root_ = nullptr;
@@ -214,9 +214,9 @@ class avl_tree {
   }
 
   iterator insert(const value_type& val) {
-    tree_node* insertedNode = nullptr;
-    root_ = insert(root_, val, nullptr, &insertedNode);
-    return iterator(insertedNode, this);
+    tree_node* inserted_node = nullptr;
+    root_ = insert(root_, val, nullptr, &inserted_node);
+    return iterator(inserted_node, this);
   }
 
   void remove(const Key& key) {  // удаление первого элемента с заданным ключом
@@ -225,7 +225,7 @@ class avl_tree {
 
   void erase(iterator pos) {  // удаление конкретного элемента
     if (pos == end()) return;
-    root_ = eraseNode(root_, pos.node_, nullptr);
+    root_ = erase_node(root_, pos.node_, nullptr);
   }
 
   void swap(avl_tree& other) {
@@ -237,7 +237,7 @@ class avl_tree {
 
   void merge(avl_tree& other) {
     if (this == &other) return;
-    mergeNodes(other.root_);
+    merge_nodes(other.root_);
     other.root_ = nullptr;
   }
 
@@ -277,9 +277,9 @@ class avl_tree {
                                          search_upper_bound(root_, key));
   }
 
-  const_iterator begin() const { return iterator(minValueNode(root_), this); }
+  const_iterator begin() const { return iterator(min_value_node(root_), this); }
 
-  iterator begin() { return iterator(minValueNode(root_), this); }
+  iterator begin() { return iterator(min_value_node(root_), this); }
 
   const_iterator end() const { return iterator(nullptr, this); }
 
@@ -301,13 +301,13 @@ class avl_tree {
   tree_node* root_;
   friend class iterator;
 
-  tree_node* copyTree(tree_node* node, tree_node* parent) {
+  tree_node* copy_tree(tree_node* node, tree_node* parent) {
     if (!node) return nullptr;
-    tree_node* newNode = new tree_node(node->data, parent);
-    newNode->left = copyTree(node->left, newNode);
-    newNode->right = copyTree(node->right, newNode);
-    newNode->height = node->height;
-    return newNode;
+    tree_node* new_node = new tree_node(node->data, parent);
+    new_node->left = copy_tree(node->left, new_node);
+    new_node->right = copy_tree(node->right, new_node);
+    new_node->height = node->height;
+    return new_node;
   }
 
   void destroy(tree_node* node) {
@@ -320,11 +320,11 @@ class avl_tree {
 
   int height(tree_node* node) { return node ? node->height : 0; }
 
-  int getBalance(tree_node* node) {
+  int get_balance(tree_node* node) {
     return node ? (height(node->left) - height(node->right)) : 0;
   }
 
-  tree_node* rotateRight(tree_node* y) {
+  tree_node* rotate_right(tree_node* y) {
     tree_node* x = y->left;
     tree_node* T2 = x->right;
 
@@ -340,7 +340,7 @@ class avl_tree {
     return x;
   }
 
-  tree_node* rotateLeft(tree_node* x) {
+  tree_node* rotate_left(tree_node* x) {
     tree_node* y = x->right;
     tree_node* T2 = y->left;
 
@@ -357,7 +357,7 @@ class avl_tree {
     return y;
   }
 
-  tree_node* minValueNode(tree_node* node) const {
+  tree_node* min_value_node(tree_node* node) const {
     tree_node* current = node;
     while (current and current->left != nullptr) {
       current = current->left;
@@ -366,24 +366,24 @@ class avl_tree {
   }
 
   tree_node* balance(tree_node* node) {
-    int balanceFactor = getBalance(node);
+    int balanceFactor = get_balance(node);
     // Left Left
-    if (balanceFactor > 1 and getBalance(node->left) >= 0) {
-      return rotateRight(node);
+    if (balanceFactor > 1 and get_balance(node->left) >= 0) {
+      return rotate_right(node);
     }
     // Left Right
-    if (balanceFactor > 1 and getBalance(node->left) < 0) {
-      node->left = rotateLeft(node->left);
-      return rotateRight(node);
+    if (balanceFactor > 1 and get_balance(node->left) < 0) {
+      node->left = rotate_left(node->left);
+      return rotate_right(node);
     }
     // Right Right
-    if (balanceFactor < -1 and getBalance(node->right) <= 0) {
-      return rotateLeft(node);
+    if (balanceFactor < -1 and get_balance(node->right) <= 0) {
+      return rotate_left(node);
     }
     // Right Left
-    if (balanceFactor < -1 and getBalance(node->right) > 0) {
-      node->right = rotateRight(node->right);
-      return rotateLeft(node);
+    if (balanceFactor < -1 and get_balance(node->right) > 0) {
+      node->right = rotate_right(node->right);
+      return rotate_left(node);
     }
     return node;
   }
@@ -408,7 +408,7 @@ class avl_tree {
 
   // Вспомогательный метод для вставки уже выделенного узла.
   // Перед вставкой нужно обнулить левый и правый дочерние указатели узла.
-  tree_node* insertNode(tree_node* curr, tree_node* node, tree_node* parent) {
+  tree_node* insert_node(tree_node* curr, tree_node* node, tree_node* parent) {
     if (!curr) {
       node->parent = parent;
       node->left = node->right = nullptr;
@@ -416,26 +416,26 @@ class avl_tree {
       return node;
     }
     if (node->key() < curr->key())
-      curr->left = insertNode(curr->left, node, curr);
+      curr->left = insert_node(curr->left, node, curr);
     else
-      curr->right = insertNode(curr->right, node, curr);
+      curr->right = insert_node(curr->right, node, curr);
     curr->height = std::max(height(curr->left), height(curr->right)) + 1;
     return balance(curr);
   }
 
-  void mergeNodes(tree_node* node) {
+  void merge_nodes(tree_node* node) {
     if (!node) return;
-    mergeNodes(node->left);
-    mergeNodes(node->right);
+    merge_nodes(node->left);
+    merge_nodes(node->right);
     // «Отрываем» данный узел от дерева-источника
     node->left = node->right = nullptr;
     node->parent = nullptr;
     // Вставляем узел в текущее дерево
-    root_ = insertNode(root_, node, nullptr);
+    root_ = insert_node(root_, node, nullptr);
   }
 
   // удаляет по указателю
-  tree_node* eraseNode(tree_node* root, tree_node* target, tree_node* parent) {
+  tree_node* erase_node(tree_node* root, tree_node* target, tree_node* parent) {
     if (root == nullptr) return root;
     root->parent = parent;
     if (root == target) {
@@ -447,17 +447,17 @@ class avl_tree {
         }
         return temp;
       } else {
-        tree_node* temp = minValueNode(root->right);
+        tree_node* temp = min_value_node(root->right);
         root->data.second = temp->data.second;
         // TODO explore alternatives
         const_cast<key_type&>(root->data.first) = temp->data.first;
-        root->right = eraseNode(root->right, temp, root);
+        root->right = erase_node(root->right, temp, root);
       }
     } else {
       if (target->key() < root->key())
-        root->left = eraseNode(root->left, target, root);
+        root->left = erase_node(root->left, target, root);
       else
-        root->right = eraseNode(root->right, target, root);
+        root->right = erase_node(root->right, target, root);
     }
     if (root == nullptr) return root;
     root->height = std::max(height(root->left), height(root->right)) + 1;
@@ -487,7 +487,7 @@ class avl_tree {
         }
 
       } else {
-        tree_node* temp = minValueNode(node->right);
+        tree_node* temp = min_value_node(node->right);
         node->data.second = temp->data.second;
         // TODO explore alternatives
         const_cast<key_type&>(node->data.first) = temp->data.first;
