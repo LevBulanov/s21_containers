@@ -8,13 +8,13 @@
 
 namespace s21 {
 
-template <typename value_type>
+template <typename T>
 class stack {
  public:
-  // TODO change to using ... = ... ;
-  typedef value_type& reference;
-  typedef const value_type& const_reference;
-  typedef size_t size_type;
+  using value_type = T;
+  using reference = T&;
+  using const_reference = const T&;
+  using size_type = std::size_t;
 
   // default constructor, creates empty stack
   stack() noexcept : ptr_top_(nullptr), size_(0) {}
