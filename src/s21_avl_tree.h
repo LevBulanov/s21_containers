@@ -219,13 +219,13 @@ class avl_tree {
     return iterator(inserted_node, this);
   }
 
-  void remove(const Key& key) {  // удаление первого элемента с заданным ключом
-    root_ = remove(root_, key, nullptr);
+  void remove(const Key& key) {  // удаление первого элемента с заданным ключем
+    root_ = remove(root_, root_, key);
   }
 
   void erase(iterator pos) {  // удаление конкретного элемента
     if (pos == end()) return;
-    root_ = erase_node(root_, pos.node_, nullptr);
+    root_ = erase_node(root_, pos.node_);
   }
 
   void swap(avl_tree& other) {
@@ -434,68 +434,81 @@ class avl_tree {
     root_ = insert_node(root_, node, nullptr);
   }
 
-  // удаляет по указателю
-  tree_node* erase_node(tree_node* root, tree_node* target, tree_node* parent) {
-    if (root == nullptr) return root;
-    root->parent = parent;
-    if (root == target) {
-      if (root->left == nullptr || root->right == nullptr) {
-        tree_node* temp = root->left ? root->left : root->right;
-        delete root;
-        if (temp != nullptr) {
-          temp->parent = parent;
-        }
-        return temp;
-      } else {
-        tree_node* temp = min_value_node(root->right);
-        root->data.second = temp->data.second;
-        // TODO explore alternatives
-        const_cast<key_type&>(root->data.first) = temp->data.first;
-        root->right = erase_node(root->right, temp, root);
-      }
+  void transplant(tree_node*& root, tree_node* u, tree_node* v) {
+    if (u->parent == nullptr) {
+      // u - корень дерева
+      root = v;
+    } else if (u == u->parent->left) {
+      u->parent->left = v;
     } else {
-      if (target->key() < root->key())
-        root->left = erase_node(root->left, target, root);
-      else
-        root->right = erase_node(root->right, target, root);
+      u->parent->right = v;
     }
-    if (root == nullptr) return root;
-    root->height = std::max(height(root->left), height(root->right)) + 1;
-    return balance(root);
+    if (v) v->parent = u->parent;
   }
 
-  // удаляет первый ключ
-  tree_node* remove(tree_node* node, const Key& key, tree_node* parent) {
-    if (node == nullptr) {
-      return node;
-    }
-    node->parent = parent;
-    if (key < node->key()) {
-      node->left = remove(node->left, key, node);
-    } else if (key > node->key()) {
-      node->right = remove(node->right, key, node);
+  // удаляет по указателю
+  tree_node* erase_node(tree_node*& root, tree_node* target) {
+    if (target == nullptr) return root;
+    if (target->left == nullptr) {
+      transplant(root, target, target->right);
+      delete target;
+    } else if (target->right == nullptr) {
+      transplant(root, target, target->left);
+      delete target;
     } else {
-      if (node->left == nullptr || node->right == nullptr) {
-        tree_node* temp = node->left ? node->left : node->right;
-        if (temp == nullptr) {
-          delete node;
-          return nullptr;
-        } else {
-          temp->parent = parent;
-          delete node;
-          return temp;
-        }
-
-      } else {
-        tree_node* temp = min_value_node(node->right);
-        node->data.second = temp->data.second;
-        // TODO explore alternatives
-        const_cast<key_type&>(node->data.first) = temp->data.first;
-        node->right = remove(node->right, temp->key(), node);
+      tree_node* succ = min_value_node(target->right);
+      if (succ->parent != target) {
+        transplant(root, succ, succ->right);
+        succ->right = target->right;
+        if (succ->right) succ->right->parent = succ;
       }
+      transplant(root, target, succ);
+      succ->left = target->left;
+      if (succ->left) succ->left->parent = succ;
+      delete target;
     }
-    if (node == nullptr) {
-      return node;
+    if (root) {
+      root->height = std::max(height(root->left), height(root->right)) + 1;
+      root = balance(root);
+    }
+    return root;
+  }
+
+  tree_node* remove(tree_node*& root, tree_node* node, const Key& key) {
+    if (node == nullptr) return node;
+    if (key < node->key()) {
+      node->left = remove(root, node->left, key);
+    } else if (key > node->key()) {
+      node->right = remove(root, node->right, key);
+    } else {
+      // Узел для удаления найден
+      if (node->left == nullptr) {
+        tree_node* temp = node->right;
+        transplant(root, node, temp);
+        delete node;
+        return temp;
+      } else if (node->right == nullptr) {
+        tree_node* temp = node->left;
+        transplant(root, node, temp);
+        delete node;
+        return temp;
+      } else {
+        tree_node* successor = min_value_node(node->right);
+        if (successor != node->right) {
+          transplant(root, successor, successor->right);
+          successor->right = node->right;
+          if (successor->right) {
+            successor->right->parent = successor;
+          }
+        }
+        transplant(root, node, successor);
+        successor->left = node->left;
+        if (successor->left) {
+          successor->left->parent = successor;
+        }
+        delete node;
+        return successor;
+      }
     }
     node->height = std::max(height(node->left), height(node->right)) + 1;
     return balance(node);
