@@ -22,6 +22,7 @@ clean:
 	rm -rf *.css
 	rm -rf *.out
 	rm -rf *.gcno
+	rm -rf *.json
 
 .PHONY: test
 test: $(TEST_RUNNER)
@@ -40,7 +41,7 @@ gcov_report:
 	mkdir -p tests/build
 	$(CC) --coverage -fPIC $(TEST_SRC) $(LINK_TEST_LIBS) $(LINK_LIBS) $(FLAGS) -o $(TEST_RUNNER)
 	./$(TEST_RUNNER)
-	gcovr -e 'tests/*' --html-details gcovr-report.html
+	python3 ppcov.py --exclude 'tests/*'
 
 .PHONY: clang_format
 clang_format:
