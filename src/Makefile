@@ -10,6 +10,11 @@ HEADER_SRC = *.h
 
 TBD = tests/build
 
+UNAME := $(shell uname)
+ifeq ($(UNAME), Darwin)
+	FLAGS := $(FLAGS) -ld_classic
+endif
+
 LINK_LIBS = -lstdc++
 LINK_TEST_LIBS = -lgtest -lgtest_main -lm
 VALGRIND = CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --read-var-info=yes ./$(TEST_RUNNER)
