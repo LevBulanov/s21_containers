@@ -1,5 +1,5 @@
 CC = gcc
-FLAGS = -g -Wall -Wextra -std=c++17
+FLAGS = -g -Wall -Wextra -Werror -std=c++17
 TEST_DIR = tests
 TEST_RUNNER = tests/build/test_runner
 CLANG_FORMAT = clang-format-18 
@@ -35,6 +35,11 @@ tests/build/test_runner: $(TEST_SRC) $(HEADER_SRC)
 .PHONY: check_valgrind
 check_valgrind: $(TEST_RUNNER)
 	$(VALGRIND)
+
+docker_valgrind: 
+	docker build -t valgrind:v1 .
+	docker run --name valgrind_docker --rm valgrind:v1
+	docker rmi valgrind:v1
 
 .PHONY: gcov_report
 gcov_report: 
