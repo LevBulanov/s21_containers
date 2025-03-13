@@ -65,7 +65,7 @@ def handle_coverage_stats(file):
     cov_stats.lines = {**{line: cov_stats.lines.get(line, False) for line in distinct_lines}, **cov_stats.lines}
 
     for line in file['lines']:
-        if line['unexecuted_block'] == False:   
+        if line['count'] > 0:   
             cov_stats.lines[line['line_number']] = True
 
     distinct_functions = set([function['name'] for function in file['functions']])
