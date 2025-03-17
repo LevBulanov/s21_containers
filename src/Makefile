@@ -42,7 +42,7 @@ check_valgrind: $(TEST_RUNNER)
 	$(VALGRIND)
 
 docker_valgrind: 
-	docker build -t valgrind:v1 .
+	docker build -t valgrind:v1 . &> docker_build.log
 	docker run --name valgrind_docker --rm valgrind:v1
 	docker rmi valgrind:v1
 
