@@ -202,6 +202,7 @@ TEST(multisetTest, EqualRange) {
     if (*it == 100) cntFromEqualRange++;
   }
   EXPECT_EQ(cntFromEqualRange, tree.count(100));
+  EXPECT_EQ(cntFromEqualRange, 3);
 
   // Для отсутствующего ключа оба итератора должны совпадать.
   auto range_not = tree.equal_range(999);

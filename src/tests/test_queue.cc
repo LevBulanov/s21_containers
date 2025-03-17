@@ -64,11 +64,11 @@ TEST(QueueTest, InsertManyBack) {
   EXPECT_EQ(q.back(), 10);
 }
 
-// TEST(QueueTest, InsertManyBack_zero_args) {
-//     s21::queue<int> q;
-//     q.insert_many_back();
-//     EXPECT_EQ(q.size(), 0);
-// }
+TEST(QueueTest, InsertManyBack_zero_args) {
+  s21::queue<int> q;
+  q.insert_many_back();
+  EXPECT_EQ(q.size(), 0);
+}
 
 TEST(QueueTest, CopyConstructor) {
   s21::queue<int> q1 = {100, 200, 300};

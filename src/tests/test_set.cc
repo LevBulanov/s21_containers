@@ -208,6 +208,11 @@ TEST(SetTest, CopyConstructor) {
   EXPECT_EQ(*(++it), 'd');
 }
 
+TEST(SetTest, MaxSize) {
+  s21::set<char> set1{'a', 'b', 'c', 'd'};
+  EXPECT_GT(set1.max_size(), 0);
+}
+
 TEST(SetTest, Find1) {
   s21::set<char> set1{'a', 'b', 'c', 'd'};
   EXPECT_EQ(set1.contains('c'), true);
@@ -438,4 +443,14 @@ TEST(SetTest, InsertMany5_3) {
   EXPECT_EQ(v1[3].second, false);
   EXPECT_EQ(*(v1[4].first), 'e');
   EXPECT_EQ(v1[4].second, true);
+}
+
+TEST(SetTest, Swap) {
+  s21::set<char> set1{'a', 'b'};
+  s21::set<char> set2{'c', 'd'};
+  set1.swap(set2);
+  EXPECT_TRUE(set1.contains('c'));
+  EXPECT_TRUE(set1.contains('d'));
+  EXPECT_TRUE(set2.contains('a'));
+  EXPECT_TRUE(set2.contains('b'));
 }

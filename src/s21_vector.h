@@ -76,9 +76,9 @@ class vector {
   using iterator = vector_iterator;
   using const_iterator = const vector_const_iterator;
 
-  vector() : vector(3) {}
+  vector() : vector(0) {}
 
-  vector(size_type n) : size_(0), capacity_(n) { data_ = new value_type[n]; }
+  vector(size_type n) : size_(n), capacity_(n) { data_ = new value_type[n]{}; }
 
   vector(std::initializer_list<value_type> const& items)
       : size_(items.size()), capacity_(size_) {
@@ -116,8 +116,10 @@ class vector {
 
     data_ = other.data_;
     size_ = other.size_;
+    capacity_ = other.capacity_;
     other.data_ = nullptr;
     other.size_ = 0;
+    other.capacity_ = 0;
 
     return *this;
   }
@@ -149,7 +151,7 @@ class vector {
 
   size_type size() { return size_; }
 
-  size_type max_size() { return std::numeric_limits<size_type>::max(); }
+  size_type max_size() { return std::numeric_limits<size_type>::max() / 2; }
 
   void reserve(size_type new_cap) {
     if (new_cap <= capacity_) {
@@ -234,7 +236,8 @@ class vector {
   iterator insert_many(iterator pos, Args&&... args) {
     size_type index = (pos.ptr_ - data_);
     size_type i = 0;
-    for (auto&& arg : {std::forward<Args>(args)...}) {
+    for (const value_type arg :
+         std::initializer_list<const value_type>{std::forward<Args>(args)...}) {
       insert(iterator(data_ + index + i), arg);
       ++i;
     }
@@ -245,7 +248,8 @@ class vector {
   template <typename... Args>
   iterator insert_many_back(Args&&... args) {
     size_type i = 0;
-    for (auto&& arg : {std::forward<Args>(args)...}) {
+    for (const value_type arg :
+         std::initializer_list<const value_type>{std::forward<Args>(args)...}) {
       push_back(arg);
       ++i;
     }

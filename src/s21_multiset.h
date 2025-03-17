@@ -8,8 +8,13 @@ namespace s21 {
 template <typename Key>
 class multiset : public s21::set<Key> {
  public:
+  using key_type = Key;
   using value_type = Key;
+  using reference = value_type&;
+  using const_reference = const value_type&;
   using iterator = typename s21::set<Key>::iterator;
+  using const_iterator = typename s21::set<Key>::const_iterator;
+  using size_type = size_t;
   using s21::set<Key>::set;
   using base = s21::set<Key>;
 

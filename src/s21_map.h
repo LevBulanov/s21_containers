@@ -68,7 +68,7 @@ class map : public avl_tree<Key, T> {
     return insert({key, obj});
   }
 
-  std::pair<iterator, bool> insert_or_assign(const key_type& key,
+  std::pair<iterator, bool> insert_or_assign(const Key& key,
                                              const mapped_type& obj) {
     auto try_insert = insert({key, obj});
     if (!try_insert.second) {

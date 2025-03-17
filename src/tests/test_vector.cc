@@ -4,13 +4,14 @@
 TEST(VectorTest, DefaultConstructor) {
   s21::vector<int> vec;
   EXPECT_EQ(vec.size(), 0);
-  EXPECT_EQ(vec.capacity(), 3);
+  EXPECT_EQ(vec.capacity(), 0);
 }
 
 TEST(VectorTest, SizeConstructor) {
   s21::vector<int> vec(5);
-  EXPECT_EQ(vec.size(), 0);
+  EXPECT_EQ(vec.size(), 5);
   EXPECT_EQ(vec.capacity(), 5);
+  EXPECT_EQ(vec[2], 0);
 }
 
 TEST(VectorTest, InitializerListConstructor) {
@@ -155,12 +156,12 @@ TEST(VectorTest, NonEmpty) {
 
 TEST(VectorTest, MaxSize) {
   s21::vector<int> vec;
-  EXPECT_EQ(vec.max_size(), std::numeric_limits<size_t>::max());
+  EXPECT_GT(vec.max_size(), 0);
 }
 
 TEST(VectorTest, Reserve) {
   s21::vector<int> vec;
-  EXPECT_EQ(vec.capacity(), 3);
+  EXPECT_EQ(vec.capacity(), 0);
   vec.reserve(5);
   EXPECT_EQ(vec.capacity(), 5);
 }
@@ -237,7 +238,7 @@ TEST(VectorTest, Swap) {
   EXPECT_EQ(vec2[2], 3);
 }
 
-TEST(VectorTest, InsertMany) {
+TEST(VectorTest, InsertManyTwo) {
   s21::vector<int> vec = {1, 2, 3};
   auto pos = vec.begin();
   ++pos;
@@ -248,6 +249,17 @@ TEST(VectorTest, InsertMany) {
   EXPECT_EQ(vec[2], 5);
   EXPECT_EQ(vec[3], 2);
   EXPECT_EQ(vec[4], 3);
+}
+
+TEST(VectorTest, InsertManyZero) {
+  s21::vector<int> vec = {1, 2, 3};
+  auto pos = vec.begin();
+  ++pos;
+  vec.insert_many(pos);
+  EXPECT_EQ(vec.size(), 3);
+  EXPECT_EQ(vec[0], 1);
+  EXPECT_EQ(vec[1], 2);
+  EXPECT_EQ(vec[2], 3);
 }
 
 TEST(VectorTest, InsertManyBack) {
